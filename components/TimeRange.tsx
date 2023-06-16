@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useId, useState } from 'react';
+import { theme } from '../styles/theme';
 
 interface TimeRangeProps {
 	min: number;
@@ -18,21 +19,6 @@ const TimeRange = ({
 	label,
 }: TimeRangeProps) => {
 	const id = useId();
-	// const [change, setChange] = useState<number>(0);
-
-	// const debounceValueChange = (mode: string, value: number, timeout = 1000) => {
-	// 	let newValue = change + value;
-	// 	setChange(newValue);
-	// 	let timer;
-	// 	clearTimeout(timer);
-	// 	timer = setTimeout(() => {
-	// 		console.log('new val' + change);
-	// 		handleChange(mode, change);
-	// 		setChange(0);
-	// 	}, timeout);
-
-	// 	// handleChange(mode, Number(e.target.value));
-	// };
 
 	return (
 		<InputWrapper>
@@ -48,7 +34,9 @@ const TimeRange = ({
 					handleChange(mode, Number(e.target.value));
 				}}
 			></input>
-			<Span>{defaultValue}</Span>
+			<Span>{`${defaultValue} ${
+				label && label.slice(0, 1).toLowerCase()
+			}`}</Span>
 		</InputWrapper>
 	);
 };
@@ -56,6 +44,35 @@ const TimeRange = ({
 const InputWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
+
+	input[type='range'] {
+		appearance: none;
+		border-bottom: 1px solid ${theme.black};
+
+		&::-webkit-slider-thumb {
+			position: relative;
+			-webkit-appearance: none;
+			height: 16px;
+			width: 16px;
+			background-color: transparent;
+			cursor: pointer;
+			background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1kb3duIj48cG9seWxpbmUgcG9pbnRzPSI2IDkgMTIgMTUgMTggOSI+PC9wb2x5bGluZT48L3N2Zz4=');
+			background-position: center;
+			background-size: cover;
+		}
+
+		&::-moz-range-thumb {
+			position: relative;
+			-webkit-appearance: none;
+			height: 16px;
+			width: 16px;
+			background-color: transparent;
+			cursor: pointer;
+			background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1kb3duIj48cG9seWxpbmUgcG9pbnRzPSI2IDkgMTIgMTUgMTggOSI+PC9wb2x5bGluZT48L3N2Zz4=');
+			background-position: center;
+			background-size: cover;
+		}
+	}
 `;
 
 const Label = styled.label`
