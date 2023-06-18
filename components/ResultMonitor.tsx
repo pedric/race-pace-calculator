@@ -30,6 +30,7 @@ const ResultMonitor = ({
 				)}
 			</Racename>
 			<Monitor>
+				{data.distance <= 0 && <Reminder>Please set a distance.</Reminder>}
 				<Section units={'metric'}>
 					<Title>Metric</Title>
 					<Row>
@@ -136,6 +137,10 @@ const SubTitle = styled.span`
 
 const Row = styled.div`
 	padding: 0.2em;
+`;
+
+const Reminder = styled.p`
+	text-align: center;
 `;
 
 const Section = styled.div<any>`

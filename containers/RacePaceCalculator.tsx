@@ -19,6 +19,7 @@ import TimeTicker from '../components/TimeTicker';
 import TimeRange from '../components/TimeRange';
 import RaceSelector from '../components/RaceSelector';
 import ResultMonitor from '../components/ResultMonitor';
+import RangeControl from '../components/RangeControl';
 import { theme } from '../styles/theme';
 
 const RacePaceCalculator = () => {
@@ -171,11 +172,13 @@ const RacePaceCalculator = () => {
 					/>
 					<div>
 						<Form action='#' onSubmit={(e) => e.preventDefault()}>
+							<RangeControl />
 							<Control>
 								<TimeTicker unit={UNIT.H} timeTick={timeTick} value={-1} />
 								<TimeRange
 									min={0}
 									max={data.distance > 80000 ? 100 : 10}
+									value={data.hours}
 									defaultValue={data.hours}
 									handleChange={handleTimeChange}
 									mode={'hours'}
@@ -188,6 +191,7 @@ const RacePaceCalculator = () => {
 								<TimeRange
 									min={0}
 									max={59}
+									value={data.minutes}
 									defaultValue={data.minutes}
 									handleChange={handleTimeChange}
 									mode={'minutes'}
@@ -200,6 +204,7 @@ const RacePaceCalculator = () => {
 								<TimeRange
 									min={0}
 									max={59}
+									value={data.seconds}
 									defaultValue={data.seconds}
 									handleChange={handleTimeChange}
 									mode={'seconds'}

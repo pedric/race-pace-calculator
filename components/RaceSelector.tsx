@@ -4,7 +4,7 @@ import { PaceData, Pace } from '../types';
 
 interface RaceProps {
 	data: PaceData;
-	value: number | null | undefined;
+	value?: number;
 	userMode: string;
 	units: string;
 	handleChange: (value: number) => void;
@@ -39,7 +39,7 @@ const RaceSelector = ({
 							</div>
 							<input
 								type='number'
-								value={value || 0}
+								value={value}
 								onChange={(e) => handleChange(Number(e.target.value))}
 							/>
 						</div>
