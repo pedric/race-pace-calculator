@@ -172,7 +172,7 @@ const RacePaceCalculator = () => {
 					/>
 					<div>
 						<Form action='#' onSubmit={(e) => e.preventDefault()}>
-							<RangeControl />
+							{/* <RangeControl /> */}
 							<Control>
 								<TimeTicker unit={UNIT.H} timeTick={timeTick} value={-1} />
 								<TimeRange

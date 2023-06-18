@@ -30,7 +30,7 @@ const TimeRange = ({
 				min={min}
 				max={max}
 				value={value}
-				defaultValue={defaultValue}
+				// defaultValue={defaultValue}
 				onChange={(e) => {
 					// debounceValueChange(mode, Number(e.target.value));
 					handleChange(mode, Number(e.target.value));
