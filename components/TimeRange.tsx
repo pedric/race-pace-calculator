@@ -21,9 +21,19 @@ const TimeRange = ({
 	value,
 }: TimeRangeProps) => {
 	const id = useId();
+	const [position, setPosition] = useState<number>(0);
+
+	const handleBubble = (range: any) => {
+		const newValue = Math.floor(
+			Number(((range.value - range.min) * 100) / (range.max - range.min)),
+		);
+
+		setPosition(newValue);
+	};
 	return (
 		<InputWrapper>
 			<Label htmlFor={id}>{label}</Label>
+			<Bubble position={position}>{value}</Bubble>
 			<input
 				name={id}
 				type='range'
@@ -34,6 +44,9 @@ const TimeRange = ({
 				onChange={(e) => {
 					// debounceValueChange(mode, Number(e.target.value));
 					handleChange(mode, Number(e.target.value));
+				}}
+				onInput={(e) => {
+					handleBubble(e.target);
 				}}
 			></input>
 			<Span>{`${defaultValue} ${
@@ -46,6 +59,7 @@ const TimeRange = ({
 const InputWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
+	position: relative;
 
 	// input[type='range'] {
 	// 	appearance: none;
@@ -83,6 +97,20 @@ const Label = styled.label`
 
 const Span = styled.label`
 	text-align: center;
+`;
+
+const Bubble = styled.div<any>`
+	background: ${theme.strong};
+	color: ${theme.white};
+	display: inline-block;
+	width: fit-content;
+	padding: 2px 4px;
+	position: absolute;
+	top: 0;
+	left: ${({ position }) => `${position}%`};
+	transform: translateX(-105%);
+	border-radius: 4px;
+	overflow: hidden;
 `;
 
 export default TimeRange;
