@@ -4,23 +4,23 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { PaceData, Pace } from '../types';
 import distances, { Distance } from '../util/distances';
-import { UNIT } from '../util/constants';
+import { UNIT, MODE, INPUT } from '../util/constants';
 import {
 	paceInKmFromStateData,
 	paceInmilesFromStateData,
-	metersToMilesToCalcMilePce,
 	metersToMiles,
+	milesToMeters,
 	kilometerPerHourPace,
 	milesPerHourPace,
 } from '../util/maths';
 import { useEffect, useState } from 'react';
-// import { Wrapper, Main } from '../styles/layout';
 import TimeTicker from '../components/TimeTicker';
 import TimeRange from '../components/TimeRange';
 import RaceSelector from '../components/RaceSelector';
 import ResultMonitor from '../components/ResultMonitor';
 import RangeControl from '../components/RangeControl';
 import { theme } from '../styles/theme';
+import PaceEditor from '../components/PaceEditor';
 
 const RacePaceCalculator = () => {
 	const initialState: PaceData = {
@@ -31,11 +31,16 @@ const RacePaceCalculator = () => {
 		raceName: '',
 	};
 
-	const [userMode, setUserMode] = useState<string>('select');
-	const [mode, setMode] = useState<string>('metric');
+	const [userMode, setUserMode] = useState<string>(INPUT.SELECT);
+	const [mode, setMode] = useState<string>(MODE.METRIC);
 
 	const [data, setData] = useState<PaceData>(initialState);
 
+	const [raceDistance, setRaceDistance] = useState<number>(
+		initialState.distance,
+	);
+
+	// const [metricData, setMetricData] = useState<PaceData>(initialState);
 	const [imperialData, setImperialData] = useState<PaceData>(initialState);
 
 	const initialPace: Pace = { minutes: 0, seconds: 0 };
@@ -46,11 +51,12 @@ const RacePaceCalculator = () => {
 	const [imperialPace, setImperialPace] = useState<Pace>(initialPace);
 
 	const handleImperialData = () => {
+		// const { distance } = data;
 		let milesPace = paceInmilesFromStateData(data);
 		setImperialPace(milesPace);
-		const converted = metersToMiles(data.distance);
+		const converted = Number(metersToMiles(data.distance));
 		const distance = Number(converted.toFixed(2));
-		const raceName = `${converted.toFixed(2)} miles`;
+		const raceName = `${distance.toFixed(2)} miles`;
 		setImperialData({ ...data, distance, raceName });
 		setMph(milesPerHourPace(data));
 	};
@@ -58,8 +64,19 @@ const RacePaceCalculator = () => {
 	const handleMetricData = () => {
 		let kmPace = paceInKmFromStateData(data);
 		setMetricPace(kmPace);
+		const converted =
+			mode == MODE.METRIC
+				? data.distance
+				: Number(milesToMeters(data.distance));
+		const distance = Number(converted.toFixed(2));
+		// setMetricData({ ...data, distance });
 		setKmh(kilometerPerHourPace(data));
 	};
+
+	useEffect(() => {
+		setData({ ...data, distance: raceDistance });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [raceDistance]);
 
 	useEffect(() => {
 		handleMetricData();
@@ -94,8 +111,10 @@ const RacePaceCalculator = () => {
 			(item) => item.distance && item.distance === value,
 		);
 		let raceName = found && found[0]?.name ? found[0].name : '';
-		let distance = value;
+		let distance = mode === MODE.IMPERIAL ? milesToMeters(value, true) : value;
+		console.log('distance-->', distance);
 		let d: PaceData = { ...data, raceName, distance };
+		setRaceDistance(value);
 		setData(d);
 	};
 
@@ -125,15 +144,6 @@ const RacePaceCalculator = () => {
 		}
 	};
 
-	if (mode == 'imperial') {
-		return (
-			<p>
-				Sorry, the support for miles input is not ready 🙏{' '}
-				<Sorry onClick={() => setMode('metric')}>Click to return</Sorry>
-			</p>
-		);
-	}
-
 	return (
 		<>
 			<Head>
@@ -144,23 +154,26 @@ const RacePaceCalculator = () => {
 
 			<Font>
 				<Wrapper>
-					<H1>Race pace calculator</H1>
+					{/* <H1>Race pace calculator</H1>
 					<Guide>
 						Select from classic distances or enter your own distance.
-					</Guide>
-					{/* <RaceMenu
-						inputChoice={userMode}
-						setInputChoice={setUserMode}
-						units={mode}
-						setUnits={setMode}
-						mode={'block'}
-					/> */}
+					</Guide> */}
 					<RaceSelector
 						data={data}
 						handleChange={handleDistanceChange}
 						userMode={userMode}
+						setUserMode={setUserMode}
 						value={data.distance}
+						imperialValue={imperialData.distance}
 						units={mode}
+						raceDistance={raceDistance}
+						setRaceDistance={setRaceDistance}
+					/>
+					<RaceMenu
+						inputChoice={userMode}
+						setInputChoice={setUserMode}
+						units={mode}
+						setUnits={setMode}
 					/>
 					<ResultMonitor
 						data={data}
@@ -169,8 +182,16 @@ const RacePaceCalculator = () => {
 						imperialPace={imperialPace}
 						kmh={kmh}
 						mph={mph}
+						mode={mode}
 					/>
 					<div>
+						<PaceEditor
+							metricPace={metricPace}
+							imperialPace={imperialPace}
+							mode={mode}
+							data={data}
+							setData={setData}
+						/>
 						<Form action='#' onSubmit={(e) => e.preventDefault()}>
 							{/* <RangeControl /> */}
 							<Control>
@@ -216,13 +237,6 @@ const RacePaceCalculator = () => {
 					</div>
 				</Wrapper>
 			</Font>
-
-			<RaceMenu
-				inputChoice={userMode}
-				setInputChoice={setUserMode}
-				units={mode}
-				setUnits={setMode}
-			/>
 		</>
 	);
 };

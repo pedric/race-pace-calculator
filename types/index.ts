@@ -15,3 +15,8 @@ export type Breakpoints = {
 	m: 760;
 	l: 1024;
 };
+
+export type PaceEditorState = {
+	metricPace: Pace;
+	imperialPace: Pace;
+};

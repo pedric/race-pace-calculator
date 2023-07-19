@@ -15,7 +15,8 @@ const TickButton = styled.button`
 	position: relative;
 	appearance: none;
 	border: none;
-	background: ${theme.complementary};
+	background: ${theme.strong};
+	color: ${theme.white};
 	text-align: center;
 	width: 30px;
 	height: 30px;

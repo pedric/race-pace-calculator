@@ -1,7 +1,16 @@
 import styled from '@emotion/styled';
 import { PaceData, Pace } from '../types';
-import { breakpoints } from '../util/constants';
+import { breakpoints, MODE } from '../util/constants';
 import { theme } from '../styles/theme';
+// import {
+// 	paceInKmFromStateData,
+// 	paceInmilesFromStateData,
+// 	metersToMilesToCalcMilePce,
+// 	metersToMiles,
+// 	milesToMeters,
+// 	kilometerPerHourPace,
+// 	milesPerHourPace,
+// } from '../util/maths';
 
 interface ResultProps {
 	data: PaceData;
@@ -10,6 +19,7 @@ interface ResultProps {
 	imperialPace: Pace;
 	kmh: number;
 	mph: number;
+	mode: string;
 }
 
 const ResultMonitor = ({
@@ -19,6 +29,7 @@ const ResultMonitor = ({
 	imperialPace,
 	kmh,
 	mph,
+	mode,
 }: ResultProps) => {
 	return (
 		<>
@@ -30,59 +41,72 @@ const ResultMonitor = ({
 				)}
 			</Racename>
 			<Monitor>
-				{data.distance <= 0 && <Reminder>Please set a distance.</Reminder>}
+				{/* {data.distance <= 0 && <Reminder>Please set a distance.</Reminder>} */}
 				<Section units={'metric'}>
 					<Title>Metric</Title>
 					<Row>
 						<SubTitle>Distance</SubTitle>
-						<Span>{`${data.distance} meters`}</Span>
+						<Span>{data.distance ? `${data.distance} meters` : 'Unset'}</Span>
 					</Row>
 					<Row>
 						<SubTitle>Total time</SubTitle>
 						<Span>{`${data.hours}:${data.minutes}:${data.seconds}`}</Span>
 					</Row>
 					<Row>
+						<SubTitle>Pace</SubTitle>
 						{data.distance && metricPace.minutes !== Infinity ? (
 							<>
-								<SubTitle>Pace</SubTitle>
 								<Span>{`${metricPace.minutes}:${metricPace.seconds} (min/km)`}</Span>
 							</>
-						) : null}
+						) : (
+							'...'
+						)}
 					</Row>
 					<Row>
+						<SubTitle>Speed</SubTitle>
 						{data.distance && kmh !== Infinity ? (
 							<>
-								<SubTitle>Speed</SubTitle>
 								<Span>{`${kmh.toFixed(2)} km/h`}</Span>
 							</>
-						) : null}
+						) : (
+							'...'
+						)}
 					</Row>
 				</Section>
 				<Section units={'imperial'}>
 					<Title>Imperial</Title>
 					<Row>
 						<SubTitle>Distance</SubTitle>
-						<Span>{`${imperialData.distance} miles`}</Span>
+						<Span>
+							{imperialData.distance
+								? `${imperialData.distance} miles`
+								: 'Unset'}
+						</Span>
 					</Row>
 					<Row>
 						<SubTitle>Total time</SubTitle>
 						<Span>{`${imperialData.hours}:${imperialData.minutes}:${imperialData.seconds}`}</Span>
 					</Row>
 					<Row>
+						<SubTitle>Pace</SubTitle>
 						{data.distance && imperialPace.minutes !== Infinity ? (
 							<>
-								<SubTitle>Pace</SubTitle>
 								<Span>{`${imperialPace.minutes}:${imperialPace.seconds} (min/mile)`}</Span>
 							</>
-						) : null}
+						) : (
+							'...'
+						)}
 					</Row>
 					<Row>
+						<SubTitle>Speed</SubTitle>
 						{data.distance && mph !== Infinity ? (
 							<>
-								<SubTitle>Speed</SubTitle>
+								{/* <SubTitle>Speed</SubTitle> */}
 								<Span>{`${mph.toFixed(2)} mp/h`}</Span>
 							</>
-						) : null}
+						) : (
+							'...'
+						)}
 					</Row>
 				</Section>
 			</Monitor>
@@ -105,9 +129,9 @@ const Monitor = styled.div<any>`
 	flex-direction: row;
 	background: ${theme.accent};
 
-	@media (min-width: ${breakpoints.s}px) {
-		flex-direction: column;
-	}
+	// @media (min-width: ${breakpoints.s}px) {
+	// 	flex-direction: column;
+	// }
 `;
 
 const Racename = styled.div`

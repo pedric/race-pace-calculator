@@ -1,10 +1,14 @@
 export interface Distance {
 	name: string;
-	distance: number;
+	distance: number | string;
+}
+
+export enum DISTANCE {
+	PRESET = 'PRESET',
+	OTHER = 'OTHER',
 }
 
 const distances: Distance[] = [
-	{ name: 'Pick a distance', distance: 0 },
 	{ name: '100m', distance: 100 },
 	{ name: '200m', distance: 200 },
 	{ name: '800m', distance: 800 },
@@ -17,6 +21,7 @@ const distances: Distance[] = [
 	{ name: 'Marathon', distance: 42195 },
 	{ name: '50 miles', distance: 80467.2 },
 	{ name: '100 miles', distance: 160934.3 },
+	{ name: 'Other', distance: DISTANCE.OTHER },
 ];
 
 export default distances;

@@ -20,7 +20,7 @@ export const theme: Theme = {
 	gray: '#ccc',
 	accent: 'rgb(0 69 255 / 7%)',
 	strong: '#5274fd',
-	complementary: 'rgb(141 141 141 / 27%)',
+	complementary: 'rgba(80,80,80,1)',
 	breakpoints: {
 		s: 500,
 		m: 760,

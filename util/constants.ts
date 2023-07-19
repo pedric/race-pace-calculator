@@ -6,6 +6,16 @@ export enum UNIT {
 	S = 'S',
 }
 
+export enum MODE {
+	METRIC = 'METRIC',
+	IMPERIAL = 'IMPERIAL',
+}
+
+export enum INPUT {
+	SELECT = 'SELECT',
+	FREE = 'FREE',
+}
+
 export const breakpoints: Breakpoints = {
 	s: 500,
 	m: 760,
