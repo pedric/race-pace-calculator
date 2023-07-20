@@ -21,7 +21,6 @@ const distances: Distance[] = [
 	{ name: 'Marathon', distance: 42195 },
 	{ name: '50 miles', distance: 80467.2 },
 	{ name: '100 miles', distance: 160934.3 },
-	{ name: 'Other', distance: DISTANCE.OTHER },
 ];
 
 export default distances;

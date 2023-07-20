@@ -18,9 +18,10 @@ import TimeTicker from '../components/TimeTicker';
 import TimeRange from '../components/TimeRange';
 import RaceSelector from '../components/RaceSelector';
 import ResultMonitor from '../components/ResultMonitor';
-import RangeControl from '../components/RangeControl';
 import { theme } from '../styles/theme';
 import PaceEditor from '../components/PaceEditor';
+import HeadLine from '../components/HeadLine';
+import Comparison from '../components/Comparison';
 
 const RacePaceCalculator = () => {
 	const initialState: PaceData = {
@@ -112,7 +113,6 @@ const RacePaceCalculator = () => {
 		);
 		let raceName = found && found[0]?.name ? found[0].name : '';
 		let distance = mode === MODE.IMPERIAL ? milesToMeters(value, true) : value;
-		console.log('distance-->', distance);
 		let d: PaceData = { ...data, raceName, distance };
 		setRaceDistance(value);
 		setData(d);
@@ -148,16 +148,39 @@ const RacePaceCalculator = () => {
 		<>
 			<Head>
 				<title>Race pace calculator</title>
+				<meta
+					name='viewport'
+					content='width=device-width, initial-scale=1, maximum-scale=1'
+				></meta>
 				<meta name='description' content='Race pace calculator' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<Font>
+			<Outer>
 				<Wrapper>
 					{/* <H1>Race pace calculator</H1>
 					<Guide>
 						Select from classic distances or enter your own distance.
 					</Guide> */}
+					<Title>
+						<h2>{'Race calculator'}</h2>
+						<p>{'Calculate your race pace'}</p>
+						<RaceMenu
+							inputChoice={userMode}
+							setInputChoice={setUserMode}
+							units={mode}
+							setUnits={setMode}
+						/>
+					</Title>
+					<ResultMonitor
+						data={data}
+						imperialData={imperialData}
+						metricPace={metricPace}
+						imperialPace={imperialPace}
+						kmh={kmh}
+						mph={mph}
+						mode={mode}
+					/>
 					<RaceSelector
 						data={data}
 						handleChange={handleDistanceChange}
@@ -169,97 +192,141 @@ const RacePaceCalculator = () => {
 						raceDistance={raceDistance}
 						setRaceDistance={setRaceDistance}
 					/>
-					<RaceMenu
-						inputChoice={userMode}
-						setInputChoice={setUserMode}
-						units={mode}
-						setUnits={setMode}
-					/>
-					<ResultMonitor
-						data={data}
-						imperialData={imperialData}
-						metricPace={metricPace}
-						imperialPace={imperialPace}
-						kmh={kmh}
-						mph={mph}
-						mode={mode}
-					/>
-					<div>
-						<PaceEditor
-							metricPace={metricPace}
-							imperialPace={imperialPace}
-							mode={mode}
-							data={data}
-							setData={setData}
-						/>
-						<Form action='#' onSubmit={(e) => e.preventDefault()}>
-							{/* <RangeControl /> */}
-							<Control>
-								<TimeTicker unit={UNIT.H} timeTick={timeTick} value={-1} />
-								<TimeRange
-									min={0}
-									max={data.distance > 80000 ? 100 : 10}
-									value={data.hours}
-									defaultValue={data.hours}
-									handleChange={handleTimeChange}
-									mode={'hours'}
-									label={'Hours'}
+					{data.distance ? (
+						<div>
+							<HeadLine initiallyOpen={true} text={'Finisher time'}>
+								<Form action='#' onSubmit={(e) => e.preventDefault()}>
+									<RangeControl>
+										<Time>{`${isNaN(data.hours) ? 0 : data.hours} h`}</Time>
+										<Control>
+											<TimeTicker
+												unit={UNIT.H}
+												timeTick={timeTick}
+												value={-1}
+											/>
+											<TimeRange
+												min={0}
+												max={data.distance > 80000 ? 100 : 10}
+												value={data.hours}
+												defaultValue={data.hours}
+												handleChange={handleTimeChange}
+												mode={'hours'}
+												label={'Hours'}
+											/>
+											<TimeTicker unit={UNIT.H} timeTick={timeTick} value={1} />
+										</Control>
+									</RangeControl>
+									<RangeControl>
+										<Time>{`${isNaN(data.minutes) ? 0 : data.minutes} m`}</Time>
+										<Control>
+											<TimeTicker
+												unit={UNIT.M}
+												timeTick={timeTick}
+												value={-1}
+											/>
+											<TimeRange
+												min={0}
+												max={59}
+												value={data.minutes}
+												defaultValue={data.minutes}
+												handleChange={handleTimeChange}
+												mode={'minutes'}
+												label={'Minutes'}
+											/>
+											<TimeTicker unit={UNIT.M} timeTick={timeTick} value={1} />
+										</Control>
+									</RangeControl>
+									<RangeControl>
+										<Time>{`${isNaN(data.seconds) ? 0 : data.seconds} s`}</Time>
+										<Control>
+											<TimeTicker
+												unit={UNIT.S}
+												timeTick={timeTick}
+												value={-1}
+											/>
+											<TimeRange
+												min={0}
+												max={59}
+												value={data.seconds}
+												defaultValue={data.seconds}
+												handleChange={handleTimeChange}
+												mode={'seconds'}
+												label={'Seconds'}
+											/>
+											<TimeTicker unit={UNIT.S} timeTick={timeTick} value={1} />
+										</Control>
+									</RangeControl>
+								</Form>
+							</HeadLine>
+
+							<HeadLine initiallyOpen={false} text={'Pace'}>
+								<PaceEditor
+									metricPace={metricPace}
+									imperialPace={imperialPace}
+									mode={mode}
+									data={data}
+									setData={setData}
 								/>
-								<TimeTicker unit={UNIT.H} timeTick={timeTick} value={1} />
-							</Control>
-							<Control>
-								<TimeTicker unit={UNIT.M} timeTick={timeTick} value={-1} />
-								<TimeRange
-									min={0}
-									max={59}
-									value={data.minutes}
-									defaultValue={data.minutes}
-									handleChange={handleTimeChange}
-									mode={'minutes'}
-									label={'Minutes'}
-								/>
-								<TimeTicker unit={UNIT.M} timeTick={timeTick} value={1} />
-							</Control>
-							<Control>
-								<TimeTicker unit={UNIT.S} timeTick={timeTick} value={-1} />
-								<TimeRange
-									min={0}
-									max={59}
-									value={data.seconds}
-									defaultValue={data.seconds}
-									handleChange={handleTimeChange}
-									mode={'seconds'}
-									label={'Seconds'}
-								/>
-								<TimeTicker unit={UNIT.S} timeTick={timeTick} value={1} />
-							</Control>
-						</Form>
-					</div>
+							</HeadLine>
+							<Comparison
+								mode={mode}
+								data={data}
+								imperialData={imperialData}
+								metricPace={metricPace}
+								imperialPace={imperialPace}
+							/>
+						</div>
+					) : null}
 				</Wrapper>
-			</Font>
+				{/* <Comparison
+					mode={mode}
+					data={data}
+					imperialData={imperialData}
+					metricPace={metricPace}
+					imperialPace={imperialPace}
+				/> */}
+			</Outer>
 		</>
 	);
 };
 
-const Guide = styled.div`
-	text-align: center;
-	font-size: 0.9em;
-	font-weight: 200;
-	color: ${theme.gray};
+const RangeControl = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 `;
 
-const H1 = styled.h1`
-	text-align: center;
-	margin-bottom: 0.25em;
+const Time = styled.div`
+	width: 50px;
+	font-size: 14px;
+`;
+
+const Title = styled.div`
+	min-height: 80px;
+	h2 {
+		font-size: 20px;
+		font-weight: 400;
+		color: ${theme.black};
+		margin: 0 0 0.25em;
+	}
+
+	p {
+		font-size: 0.9em;
+		font-weight: 200;
+		color: ${theme.dark};
+		margin: 0;
+	}
 `;
 
 const Control = styled.div`
 	display: grid;
 	grid-template-columns: 1fr 8fr 1fr;
+	width: calc(100% - 66px);
 `;
 
-const Font = styled.div`
+const Outer = styled.div`
 	font-family: 'Inter', sans-serif;
+	margin: 50px auto 0;
 `;
 
 const Form = styled.form`
@@ -268,7 +335,13 @@ const Form = styled.form`
 `;
 
 const Wrapper = styled.div`
-	margin: 0.5em;
+	position: relative;
+	margin: 0;
+	width: 460px;
+	background: ${theme.white};
+	padding: 1em;
+	border-radius: 20px;
+	border: 1px solid ${theme.gray};
 `;
 
 const Sorry = styled.span`

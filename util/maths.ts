@@ -1,3 +1,4 @@
+import { Distance } from './distances';
 import { PaceEditorState } from './../types/index';
 import { MODE } from './constants';
 
@@ -86,15 +87,20 @@ export const milesPerHourPace = (data: any) => {
 export const minutesAndHoursAndSecondsFromSeconds = (
 	sec: number,
 	meters: number,
+	floor = false,
 ) => {
+	const validData = isNaN(sec) || isNaN(meters) ? false : true;
+
 	const totalRaceTime = (sec * meters) / 1000;
-	const h = totalRaceTime / 3600;
-	const m = (h % 1) * 60;
-	const s = (m % 1) * 60;
+	const h = isNaN(totalRaceTime) ? 0 : totalRaceTime / 3600;
+	const m = isNaN(totalRaceTime) ? 0 : (h % 1) * 60;
+	const s = isNaN(totalRaceTime) ? 0 : (m % 1) * 60;
 	return {
 		hours: Number(Math.floor(h).toFixed()),
 		minutes: Number(Math.floor(m).toFixed()),
-		seconds: Number(Math.abs(s).toFixed()),
+		seconds: floor
+			? Number(Math.floor(s).toFixed())
+			: Number(Math.abs(s).toFixed()),
 	};
 };
 
@@ -111,6 +117,71 @@ export const updateStateFromPace = (
 	const sec = hoursMinutesAndSecondsToSeconds(0, data.minutes, data.seconds);
 
 	return minutesAndHoursAndSecondsFromSeconds(sec, meters);
+};
+
+export const metersToKilometers = (val: number) => {
+	return Number(val * 1000);
+};
+
+export const kilometresTometers = (val: number) => {
+	return val / 1000;
+};
+
+export const distanceToKilometres = (val: number) => {
+	const value = val / 1000;
+	return twoDecimalNumber(value);
+};
+
+export const twoDecimalNumber = (val: number) => {
+	return typeof val == 'number' ? val.toFixed(2) : null;
+};
+
+export const getComparisonPaceFromStateData = (
+	data: any,
+	distance: number,
+	mode: string,
+	units: number,
+) => {
+	// for total distance
+	let secondsOfRacing = hoursMinutesAndSecondsToSeconds(
+		data.hours,
+		data.minutes,
+		data.seconds,
+	);
+
+	const adjustedDistance =
+		mode == MODE.METRIC ? distance : metersToMilesToCalcMilePace(distance);
+	const secondsPerUnit =
+		mode == MODE.METRIC
+			? secondsOfRacing / data.distance
+			: secondsOfRacing / metersToMilesToCalcMilePace(data.distance);
+	const totalSeconds = secondsPerUnit * adjustedDistance;
+
+	// const miles = metersToMilesToCalcMilePace(distance);
+
+	const secondsPerMile = secondsPerUnitFromSecondsAndDistance(
+		totalSeconds,
+		adjustedDistance,
+	);
+
+	const secondsPerKm = secondsPerUnitFromSecondsAndDistance(
+		totalSeconds,
+		distance,
+	);
+
+	return {
+		total:
+			mode == MODE.METRIC
+				? minutesAndHoursAndSecondsFromSeconds(secondsPerKm, distance, true)
+				: minutesAndHoursAndSecondsFromSeconds(secondsPerMile, distance, true),
+	};
+
+	// return minutesAndSecondsFromSeconds(secondsPerMiles);
+};
+
+export const leadingZero = (val: number) => {
+	let value = Number(val) < 10 ? `0${val}` : val;
+	return value;
 };
 
 // export const completeStateData = (state: any, mode: string) => {

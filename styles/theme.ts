@@ -8,8 +8,10 @@ type Theme = {
 	white: string;
 	black: string;
 	gray: string;
+	dark: string;
 	accent: string;
 	strong: string;
+	cta: string;
 	complementary: string;
 	breakpoints: Breakpoints;
 };
@@ -17,9 +19,11 @@ type Theme = {
 export const theme: Theme = {
 	white: '#fdfdfd',
 	black: '#151515',
-	gray: '#ccc',
+	gray: '#D5D5D5',
+	dark: '#333',
 	accent: 'rgb(0 69 255 / 7%)',
-	strong: '#5274fd',
+	strong: '#DE5E00',
+	cta: '#e54f6b',
 	complementary: 'rgba(80,80,80,1)',
 	breakpoints: {
 		s: 500,

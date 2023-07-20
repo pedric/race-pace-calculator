@@ -31,13 +31,15 @@ const PaceEditor = ({
 			mode,
 			data.distance,
 		);
-		// console.log('HMS', { hours, minutes, seconds });
 
 		setData({ ...data, hours, minutes, seconds });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state]);
 
 	const handleChange = (value: number, unit: string) => {
+		if (isNaN(value)) {
+			return;
+		}
 		const updatedUnit =
 			unit == UNIT.M ? { minutes: value } : { seconds: value };
 		const newStateItem =
@@ -56,31 +58,42 @@ const PaceEditor = ({
 	};
 
 	const pace = mode === MODE.METRIC ? state.metricPace : state.imperialPace;
-	// const outputValue = MODE.METRIC ? metricPace : imperialPace;
 
-	return (
+	const isActive = data.distance;
+
+	return isActive ? (
 		<StyledPaceEditor>
 			<PaceTicker
 				min={0}
 				max={60}
-				value={pace.minutes}
+				value={isNaN(pace.minutes) ? 0 : pace.minutes}
 				handleChange={handleChange}
 				units={UNIT.M}
 				mode={mode}
+				type={'RANGE'}
 			/>
 			<PaceTicker
 				min={0}
-				max={60}
-				value={pace.seconds}
+				max={59}
+				value={isNaN(pace.seconds) ? 0 : pace.seconds}
 				handleChange={handleChange}
 				units={UNIT.S}
 				mode={mode}
+				type={'RANGE'}
 			/>
 		</StyledPaceEditor>
+	) : (
+		<StyledMessage>Enter distance to begin</StyledMessage>
 	);
 };
 
-const StyledPaceEditor = styled.div``;
-const StyledUnit = styled.span``;
+const StyledPaceEditor = styled.div`
+	display: grid;
+	gap: 1em;
+`;
+
+const StyledMessage = styled.div`
+	text-align: center;
+`;
 
 export default PaceEditor;

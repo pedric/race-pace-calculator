@@ -13,6 +13,8 @@ import {
 	milesToMeters,
 	kilometerPerHourPace,
 	milesPerHourPace,
+	metersToKilometers,
+	kilometresTometers,
 } from '../util/maths';
 
 interface RaceProps {
@@ -48,8 +50,9 @@ const RaceSelector = ({
 	useEffect(() => {
 		if (val === DISTANCE.OTHER) {
 			setUserMode(INPUT.FREE);
-		} else if (val) {
-			setRaceDistance(Number(val));
+		} else if (val && typeof val == 'number') {
+			const meters = userMode == INPUT.FREE ? metersToKilometers(val) : val;
+			setRaceDistance(Number(meters));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [val]);
@@ -63,46 +66,44 @@ const RaceSelector = ({
 				<form action='#' onSubmit={(e) => e.preventDefault()}>
 					{userMode == INPUT.SELECT && (
 						<div>
-							<Select open={open}>
-								<Selector onClick={() => setOpen(!open)} role='button'>
-									{raceName || 'Choose a distance'}
-									<Button>
-										<Icon
-											icon={open ? 'chevron-up' : 'chevron-down'}
-											size={20}
-										/>
-									</Button>
-								</Selector>
-								<Options open={open}>
-									{distances.map((distance: Distance) => (
-										<Option
-											key={distance.distance}
-											data-value={distance.distance}
-											onClick={(e) => setVal(distance.distance)}
-										>
-											{distance.name}
-										</Option>
-									))}
-								</Options>
-							</Select>
+							<FlexBox>
+								<SelectWrap open={open}>
+									<Select onClick={() => setOpen(!open)} role='button'>
+										{!open && <span>{raceName || 'Distance'}</span>}
+										<Button>
+											<Icon icon={'chevron-down'} size={20} />
+										</Button>
+									</Select>
+								</SelectWrap>
+								<SwitchModeButton onClick={() => setUserMode(INPUT.FREE)}>
+									<span>...|</span>
+								</SwitchModeButton>
+							</FlexBox>
+							<Options open={open}>
+								<CloseOption onClick={() => setOpen(!open)} role='button'>
+									<Icon icon={'x'} size={20} />
+								</CloseOption>
+								{distances.map((distance: Distance, idx: number) => (
+									<Option
+										key={distance.distance}
+										data-value={distance.distance}
+										onClick={(e) => setVal(distance.distance)}
+										even={idx % 2 == 0}
+									>
+										{distance.name}
+									</Option>
+								))}
+							</Options>
 						</div>
 					)}
 					{userMode == INPUT.FREE && (
-						<div>
-							<div>
-								Enter distance in {units == MODE.METRIC ? 'meters' : 'miles'} or{' '}
-								<ShowSelectBox
-									onClick={() => {
-										setVal(0);
-										setUserMode(INPUT.SELECT);
-									}}
-								>
-									reset
-								</ShowSelectBox>
-							</div>
+						<FreeEnterWrapper>
 							<input
 								type='number'
-								value={raceDistance == 0 ? '' : raceDistance}
+								placeholder={'Enter distance'}
+								value={
+									raceDistance == 0 ? '' : kilometresTometers(raceDistance)
+								}
 								onChange={(e) =>
 									setVal(
 										typeof Number(e.target.value) == 'number'
@@ -111,7 +112,10 @@ const RaceSelector = ({
 									)
 								}
 							/>
-						</div>
+							<SwitchModeButton onClick={() => setUserMode(INPUT.SELECT)}>
+								<Icon icon={'menu'} size={16} />
+							</SwitchModeButton>
+						</FreeEnterWrapper>
 					)}
 				</form>
 			</DistanceControls>
@@ -119,47 +123,144 @@ const RaceSelector = ({
 	);
 };
 
-const ShowSelectBox = styled.span``;
+const FreeEnterWrapper = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 100%;
+
+	input[type='number'] {
+		width: 60%;
+		appearance: textField;
+		flex: 1 1 auto;
+		min-height: 42px;
+		padding: 0.5em 1em;
+		border: 0;
+		background: ${theme.gray};
+		color: ${theme.black};
+		border-radius: 9999px;
+		margin-right: 0.5em;
+
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		&::placeholder {
+			color: ${theme.black};
+		}
+	}
+`;
+
+const Span = styled.span`
+	color: #757575;
+`;
+
+const FlexBox = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 100%;
+`;
 
 const DistanceControls = styled.div`
+	form {
+		position: relative;
+	}
+
 	select {
 		width: 100%;
 	}
+`;
 
-	input[type='number'] {
-		width: 100%;
+const SelectWrap = styled.div<any>`
+	position: relative;
+	padding: 0.75em 1em;
+	border-radius: 9999px;
+	background: ${({ open }) => (open ? theme.white : theme.gray)};
+	min-height: 42px;
+	width: 60%;
+	flex: 1 1 auto;
+	margin-right: 0.5em;
+
+	&:hover {
+		background: ${theme.cta};
+		color: ${theme.white};
+		cursor: pointer;
 	}
 `;
 
 const Select = styled.div<any>`
-	position: relative;
-	padding: 0.5em;
-	border: ${({ open }) => (open ? `` : `1px solid ${theme.gray}`)};
-	border-radius: 4px;
-	background: ${theme.white};
+	// background: ${theme.gray};
+	// width: 60%;
 `;
-const Selector = styled.div``;
+
+const SwitchModeButton = styled.div<any>`
+	// position: relative;
+	padding: 0.75em 1em;
+	border-radius: 9999px;
+	background: ${theme.gray};
+	color: ${theme.black};
+	min-height: 42px;
+	width: 20%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&:hover {
+		background: ${theme.cta};
+		color: ${theme.white};
+		cursor: pointer;
+	}
+`;
 
 const Options = styled.div<any>`
 	display: ${({ open }) => (open ? 'block' : 'none')};
 	position: absolute;
+	// padding-top: 42px;
 	top: 0;
 	right: 0;
 	left: 0;
-	padding: 1em;
+	// padding: 1em;
 	border: 1px solid ${theme.gray};
-	border-radius: 4px;
+	border-radius: 20px;
+	overflow: hidden;
 	background: ${theme.white};
 	z-index: 5;
 `;
-const Option = styled.div`
+
+const CloseOption = styled.div`
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 0.5em 1em;
+
+	&:hover {
+		background: ${theme.cta};
+		color: ${theme.white};
+		cursor: pointer;
+	}
+`;
+
+const Option = styled.div<any>`
+	background: ${({ even }) => (even ? theme.gray : theme.white)};
+	padding: 0.5em 1em;
 	line-height: 1.4;
+
+	&:hover {
+		background: ${theme.cta};
+		color: ${theme.white};
+		cursor: pointer;
+	}
 `;
 const Button = styled.span`
 	position: absolute;
 	top: 0;
-	right: 4px;
-	z-index: 10;
+	right: 16px;
+	z-index: 1;
 	height: 100%;
 	display: grid;
 	place-items: center;

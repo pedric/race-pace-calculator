@@ -5,23 +5,18 @@ import RacePaceCalculator from '../containers/RacePaceCalculator';
 const Home = () => {
 	return (
 		<BackDrop>
-			<Wrapper>
-				<RacePaceCalculator />
-			</Wrapper>
+			<RacePaceCalculator />
 		</BackDrop>
 	);
 };
 
 const BackDrop = styled.main`
-	background: ${theme.white};
+	background: rgba(0, 0, 0, 0.08);
 	min-height: 100vh;
 	min-width: 100vw;
-	overflow: hidden;
-`;
-
-const Wrapper = styled.div`
-	margin: 0 auto;
-	max-width: 1200px;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
 `;
 
 export default Home;
