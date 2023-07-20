@@ -87,7 +87,7 @@ const RaceSelector = ({
 									<Option
 										key={distance.distance}
 										data-value={distance.distance}
-										onClick={(e) => setVal(distance.distance)}
+										onClick={(e: any) => setVal(distance.distance)}
 										even={idx % 2 == 0}
 									>
 										{distance.name}
