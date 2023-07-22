@@ -32,9 +32,10 @@ const Comparison = ({
 		rows = [...rows, i];
 	}
 
-	// console.log(data);
+	const timeIsSet = data.hours || data.minutes || data.seconds;
+	const isActive = data.distance && timeIsSet;
 
-	return data.distance ? (
+	return isActive ? (
 		<StyledComparison>
 			<HeadLine initiallyOpen={false} text={'Comparison'}>
 				<TableRow even={false}>

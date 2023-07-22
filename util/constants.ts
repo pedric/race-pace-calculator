@@ -21,3 +21,8 @@ export const breakpoints: Breakpoints = {
 	m: 760,
 	l: 1024,
 };
+
+export enum MONITOR {
+	BUBBLE = 1,
+	BOX = 2,
+}

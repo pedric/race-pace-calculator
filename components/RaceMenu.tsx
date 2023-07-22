@@ -77,10 +77,12 @@ const Button = styled.div<any>`
 	padding: 0.5em 1em;
 	margin-right: 1em;
 	border-radius: 9999px;
+	transition: 100ms linear;
 
 	&:hover {
-		background: ${theme.white};
-		color: ${theme.cta};
+		// background: ${theme.white};
+		// color: ${theme.cta};
+		transform: scale(1.1);
 		cursor: pointer;
 	}
 `;

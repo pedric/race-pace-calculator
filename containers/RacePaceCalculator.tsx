@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { PaceData, Pace } from '../types';
 import distances, { Distance } from '../util/distances';
-import { UNIT, MODE, INPUT } from '../util/constants';
+import { UNIT, MODE, INPUT, MONITOR } from '../util/constants';
 import {
 	paceInKmFromStateData,
 	paceInmilesFromStateData,
@@ -158,10 +158,16 @@ const RacePaceCalculator = () => {
 
 			<Outer>
 				<Wrapper>
-					{/* <H1>Race pace calculator</H1>
-					<Guide>
-						Select from classic distances or enter your own distance.
-					</Guide> */}
+					<ResultMonitor
+						data={data}
+						imperialData={imperialData}
+						metricPace={metricPace}
+						imperialPace={imperialPace}
+						kmh={kmh}
+						mph={mph}
+						mode={mode}
+						style={MONITOR.BOX}
+					/>
 					<Title>
 						<h2>{'Race calculator'}</h2>
 						<p>{'Calculate your race pace'}</p>
@@ -172,7 +178,7 @@ const RacePaceCalculator = () => {
 							setUnits={setMode}
 						/>
 					</Title>
-					<ResultMonitor
+					{/* <ResultMonitor
 						data={data}
 						imperialData={imperialData}
 						metricPace={metricPace}
@@ -180,7 +186,8 @@ const RacePaceCalculator = () => {
 						kmh={kmh}
 						mph={mph}
 						mode={mode}
-					/>
+						style={MONITOR.BUBBLE}
+					/> */}
 					<RaceSelector
 						data={data}
 						handleChange={handleDistanceChange}
@@ -336,8 +343,9 @@ const Form = styled.form`
 
 const Wrapper = styled.div`
 	position: relative;
-	margin: 0;
-	width: 460px;
+	margin: 0 0.5em;
+	max-width: 460px;
+	width: calc(100vw - 1em);
 	background: ${theme.white};
 	padding: 1em;
 	border-radius: 20px;

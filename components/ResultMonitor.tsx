@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { PaceData, Pace } from '../types';
-import { breakpoints, MODE } from '../util/constants';
+import { breakpoints, MODE, MONITOR } from '../util/constants';
 import { theme } from '../styles/theme';
 import { metersToKilometers, distanceToKilometres } from '../util/maths';
 
@@ -12,6 +12,7 @@ interface ResultProps {
 	kmh: number;
 	mph: number;
 	mode: string;
+	style: number;
 }
 
 const ResultMonitor = ({
@@ -22,12 +23,13 @@ const ResultMonitor = ({
 	kmh,
 	mph,
 	mode,
+	style,
 }: ResultProps) => {
 	const timeIsSet = data.hours || data.minutes || data.seconds;
 	const isActive = data.distance && timeIsSet;
 
 	if (!isActive) {
-		return (
+		return style === MONITOR.BUBBLE ? (
 			<Monitor inActive={true}>
 				<Section>
 					<Row>
@@ -35,19 +37,80 @@ const ResultMonitor = ({
 					</Row>
 				</Section>
 			</Monitor>
+		) : (
+			<Box loading={true}></Box>
 		);
 	}
 
-	return (
-		<>
-			{/* <Racename>
-				{data.raceName && <Span>{`${data.raceName}`}</Span>}
-				{imperialData.raceName && imperialData.raceName !== '0.00 miles' && (
-					<Span>{`${imperialData.raceName}`}</Span>
-				)}
-			</Racename> */}
-			<Monitor>
-				{/* {data.distance <= 0 && <Reminder>Please set a distance.</Reminder>} */}
+	return style === MONITOR.BUBBLE ? (
+		<Monitor>
+			{mode == MODE.METRIC ? (
+				<Section units={'metric'}>
+					<Row>
+						<Span>
+							{data.distance
+								? `${distanceToKilometres(data.distance)} km`
+								: 'Unset'}
+						</Span>
+					</Row>
+					<Row>
+						<Span>{`${data.hours}h ${data.minutes}m ${data.seconds}s`}</Span>
+					</Row>
+					<Row>
+						{data.distance && metricPace.minutes !== Infinity ? (
+							<>
+								<Span>{`${metricPace.minutes}:${metricPace.seconds} min/km`}</Span>
+							</>
+						) : (
+							'...'
+						)}
+					</Row>
+					<Row>
+						{data.distance && kmh !== Infinity ? (
+							<>
+								<Span>{`${kmh.toFixed(2)} km/h`}</Span>
+							</>
+						) : (
+							'...'
+						)}
+					</Row>
+				</Section>
+			) : (
+				<Section units={'imperial'}>
+					<Row>
+						<Span>
+							{imperialData.distance
+								? `${imperialData.distance} miles`
+								: 'Unset'}
+						</Span>
+					</Row>
+					<Row>
+						<Span>{`${imperialData.hours}:${imperialData.minutes}:${imperialData.seconds}`}</Span>
+					</Row>
+					<Row>
+						{data.distance && imperialPace.minutes !== Infinity ? (
+							<>
+								<Span>{`${imperialPace.minutes}:${imperialPace.seconds} (min/mile)`}</Span>
+							</>
+						) : (
+							'...'
+						)}
+					</Row>
+					<Row>
+						{data.distance && mph !== Infinity ? (
+							<>
+								<Span>{`${mph.toFixed(2)} mp/h`}</Span>
+							</>
+						) : (
+							'...'
+						)}
+					</Row>
+				</Section>
+			)}
+		</Monitor>
+	) : (
+		<Box>
+			<InnerBox>
 				{mode == MODE.METRIC ? (
 					<Section units={'metric'}>
 						<Row>
@@ -111,10 +174,42 @@ const ResultMonitor = ({
 						</Row>
 					</Section>
 				)}
-			</Monitor>
-		</>
+			</InnerBox>
+		</Box>
 	);
 };
+
+const Box = styled.div<any>`
+	@keyframes pulse {
+		0% {
+			background: ${theme.gray};
+		}
+		50% {
+			background: ${theme.white};
+		}
+		100% {
+			background: ${theme.gray};
+		}
+	}
+
+	background: ${theme.black};
+	color: ${theme.white};
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	height: 100px;
+	margin-top: -1em;
+	margin-right: -1em;
+	margin-left: -1em;
+	margin-bottom: 0.5em;
+
+	animation: ${({ loading }) =>
+		loading == true ? 'pulse 3s ease-in-out infinite' : 'none'};
+	opacity: ${({ loading }) => (loading == true ? '.5' : '1')};
+`;
+
+const InnerBox = styled.div`
+	padding: 1em;
+`;
 
 const Spacer = styled.div`
 	height: 1em;
