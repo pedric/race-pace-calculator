@@ -14,8 +14,8 @@ export const secondsPerUnitFromSecondsAndDistance = (sec: any, length: any) => {
 };
 
 export const minutesAndSecondsFromSeconds = (sec: any) => {
-	const minutes = Math.trunc(sec / 60);
-	const seconds = Math.trunc(sec % 60);
+	const minutes = Number(Math.floor(sec / 60));
+	const seconds = Number(Math.floor(sec % 60));
 	return { minutes, seconds };
 };
 
@@ -175,8 +175,6 @@ export const getComparisonPaceFromStateData = (
 				? minutesAndHoursAndSecondsFromSeconds(secondsPerKm, distance, true)
 				: minutesAndHoursAndSecondsFromSeconds(secondsPerMile, distance, true),
 	};
-
-	// return minutesAndSecondsFromSeconds(secondsPerMiles);
 };
 
 export const leadingZero = (val: number) => {

@@ -38,7 +38,7 @@ const ResultMonitor = ({
 				</Section>
 			</Monitor>
 		) : (
-			<Box loading={true}></Box>
+			<Box isLoading={true}></Box>
 		);
 	}
 
@@ -79,18 +79,16 @@ const ResultMonitor = ({
 				<Section units={'imperial'}>
 					<Row>
 						<Span>
-							{imperialData.distance
-								? `${imperialData.distance} miles`
-								: 'Unset'}
+							{imperialData.distance ? `${imperialData.distance} mi` : 'Unset'}
 						</Span>
 					</Row>
 					<Row>
-						<Span>{`${imperialData.hours}:${imperialData.minutes}:${imperialData.seconds}`}</Span>
+						<Span>{`${imperialData.hours}h ${imperialData.minutes}m ${imperialData.seconds}s`}</Span>
 					</Row>
 					<Row>
 						{data.distance && imperialPace.minutes !== Infinity ? (
 							<>
-								<Span>{`${imperialPace.minutes}:${imperialPace.seconds} (min/mile)`}</Span>
+								<Span>{`${imperialPace.minutes}:${imperialPace.seconds} min/mile`}</Span>
 							</>
 						) : (
 							'...'
@@ -147,17 +145,17 @@ const ResultMonitor = ({
 						<Row>
 							<Span>
 								{imperialData.distance
-									? `${imperialData.distance} miles`
+									? `${imperialData.distance} mi`
 									: 'Unset'}
 							</Span>
 						</Row>
 						<Row>
-							<Span>{`${imperialData.hours}:${imperialData.minutes}:${imperialData.seconds}`}</Span>
+							<Span>{`${imperialData.hours}h ${imperialData.minutes}m ${imperialData.seconds}s`}</Span>
 						</Row>
 						<Row>
 							{data.distance && imperialPace.minutes !== Infinity ? (
 								<>
-									<Span>{`${imperialPace.minutes}:${imperialPace.seconds} (min/mile)`}</Span>
+									<Span>{`${imperialPace.minutes}:${imperialPace.seconds} min/mi`}</Span>
 								</>
 							) : (
 								'...'
@@ -202,9 +200,9 @@ const Box = styled.div<any>`
 	margin-left: -1em;
 	margin-bottom: 0.5em;
 
-	animation: ${({ loading }) =>
-		loading == true ? 'pulse 3s ease-in-out infinite' : 'none'};
-	opacity: ${({ loading }) => (loading == true ? '.5' : '1')};
+	animation: ${({ isLoading }) =>
+		isLoading == true ? 'pulse 3s ease-in-out infinite' : 'none'};
+	opacity: ${({ isLoading }) => (isLoading == true ? '0.5' : '1')};
 `;
 
 const InnerBox = styled.div`

@@ -63,9 +63,9 @@ const Comparison = ({
 							<TableCell>{`${_}${
 								mode == MODE.METRIC ? 'km' : 'mi'
 							}`}</TableCell>
-							<TableCell>{`${total.hours ? `${total.hours}:` : ''}${leadingZero(
-								total.minutes,
-							)}:${leadingZero(total.seconds)}`}</TableCell>
+							<TableCell>{`${total.hours ? `${total.hours}h ` : ''} ${
+								total.minutes ? `${leadingZero(total.minutes)}m` : ''
+							} ${leadingZero(total.seconds)}s`}</TableCell>
 						</TableRow>
 					);
 				})}

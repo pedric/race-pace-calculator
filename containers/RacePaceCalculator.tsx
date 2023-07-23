@@ -178,15 +178,11 @@ const RacePaceCalculator = () => {
 							setUnits={setMode}
 						/>
 					</Title>
-					{/* <ResultMonitor
-						data={data}
-						imperialData={imperialData}
-						metricPace={metricPace}
-						imperialPace={imperialPace}
-						kmh={kmh}
-						mph={mph}
-						mode={mode}
-						style={MONITOR.BUBBLE}
+					{/* <RaceMenu
+						inputChoice={userMode}
+						setInputChoice={setUserMode}
+						units={mode}
+						setUnits={setMode}
 					/> */}
 					<RaceSelector
 						data={data}

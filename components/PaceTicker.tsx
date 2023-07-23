@@ -145,19 +145,20 @@ const Value = styled.div`
 	input[type='range'] {
 		width: calc(100% - 1em);
 		appearance: none;
-		border-bottom: 4px solid ${theme.gray};
+		// border-bottom: 4px solid ${theme.gray};
 		position: relative;
 		margin: 0 0.5em;
 
-		// &::before {
-		// 	content: '';
-		// 	position: absolute;
-		// 	top: 5px;
-		// 	right: 0;
-		// 	left: 0;
-		// 	z-index: 0;
-		// 	border-bottom: 4px solid ${theme.gray};
-		// }
+		&::before {
+			content: '';
+			position: absolute;
+			// top: 5px;
+			bottom: -4px;
+			right: 0;
+			left: 0;
+			z-index: 0;
+			border-bottom: 4px solid ${theme.gray};
+		}
 
 		&::-webkit-slider-thumb {
 			width: 16px;
