@@ -112,19 +112,23 @@ const ResultMonitor = ({
 				{mode == MODE.METRIC ? (
 					<Section units={'metric'}>
 						<Row>
-							<Span>
+							<Span large={true}>
 								{data.distance
 									? `${distanceToKilometres(data.distance)} km`
 									: 'Unset'}
 							</Span>
 						</Row>
 						<Row>
-							<Span>{`${data.hours}h ${data.minutes}m ${data.seconds}s`}</Span>
+							<Span
+								large={true}
+							>{`${data.hours}h ${data.minutes}m ${data.seconds}s`}</Span>
 						</Row>
 						<Row>
 							{data.distance && metricPace.minutes !== Infinity ? (
 								<>
-									<Span>{`${metricPace.minutes}:${metricPace.seconds} min/km`}</Span>
+									<Span
+										large={true}
+									>{`${metricPace.minutes}:${metricPace.seconds} min/km`}</Span>
 								</>
 							) : (
 								'...'
@@ -133,7 +137,7 @@ const ResultMonitor = ({
 						<Row>
 							{data.distance && kmh !== Infinity ? (
 								<>
-									<Span>{`${kmh.toFixed(2)} km/h`}</Span>
+									<Span large={true}>{`${kmh.toFixed(2)} km/h`}</Span>
 								</>
 							) : (
 								'...'
@@ -143,19 +147,23 @@ const ResultMonitor = ({
 				) : (
 					<Section units={'imperial'}>
 						<Row>
-							<Span>
+							<Span large={true}>
 								{imperialData.distance
 									? `${imperialData.distance} mi`
 									: 'Unset'}
 							</Span>
 						</Row>
 						<Row>
-							<Span>{`${imperialData.hours}h ${imperialData.minutes}m ${imperialData.seconds}s`}</Span>
+							<Span
+								large={true}
+							>{`${imperialData.hours}h ${imperialData.minutes}m ${imperialData.seconds}s`}</Span>
 						</Row>
 						<Row>
 							{data.distance && imperialPace.minutes !== Infinity ? (
 								<>
-									<Span>{`${imperialPace.minutes}:${imperialPace.seconds} min/mi`}</Span>
+									<Span
+										large={true}
+									>{`${imperialPace.minutes}:${imperialPace.seconds} min/mi`}</Span>
 								</>
 							) : (
 								'...'
@@ -164,7 +172,7 @@ const ResultMonitor = ({
 						<Row>
 							{data.distance && mph !== Infinity ? (
 								<>
-									<Span>{`${mph.toFixed(2)} mp/h`}</Span>
+									<Span large={true}>{`${mph.toFixed(2)} mp/h`}</Span>
 								</>
 							) : (
 								'...'
@@ -194,7 +202,7 @@ const Box = styled.div<any>`
 	color: ${theme.white};
 	border-top-left-radius: 20px;
 	border-top-right-radius: 20px;
-	height: 100px;
+	min-height: 100px;
 	margin-top: -1em;
 	margin-right: -1em;
 	margin-left: -1em;
@@ -207,10 +215,6 @@ const Box = styled.div<any>`
 
 const InnerBox = styled.div`
 	padding: 1em;
-`;
-
-const Spacer = styled.div`
-	height: 1em;
 `;
 
 const Monitor = styled.div<any>`
@@ -228,35 +232,11 @@ const Monitor = styled.div<any>`
 	right: 1em;
 	top: -30px;
 	font-size: 16px;
-
-	// @media (min-width: ${breakpoints.s}px) {
-	// 	flex-direction: column;
-	// }
 `;
 
-const Racename = styled.div`
-	display: flex;
-	justify-content: space-between;
-	margin: 0 0.5em 0.5em 0;
-`;
-
-const Title = styled.div`
-	font-size: 0.8em;
-	font-weight: 200;
-	text-transform: uppercase;
-	margin-bottom: 0.25em;
-`;
-
-const Span = styled.span`
-	font-size: 0.8em;
-	// font-weight: 200;
-`;
-
-const SubTitle = styled.span`
-	display: block;
-	font-size: 0.6em;
-	font-weight: 200;
-	text-transform: uppercase;
+const Span = styled.span<any>`
+	font-size: ${({ large }) => (large ? '1em' : '0.8em')};
+	${({ large }) => (large ? 'line-height:1.2;' : '')}
 `;
 
 const Row = styled.div`
@@ -265,14 +245,7 @@ const Row = styled.div`
 	line-height: 1;
 `;
 
-const Reminder = styled.p`
-	text-align: center;
-`;
-
 const Section = styled.div<any>`
-	// flex: 1 1 auto;
-	// padding: 0.5;
-	// background: rgb(144 238 144 / 24%);
 	text-align: center;
 
 	@media (min-width: ${breakpoints.s}px) {

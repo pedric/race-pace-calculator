@@ -75,6 +75,7 @@ const InputWrapper = styled.div`
 			left: 0;
 			z-index: 0;
 			border-bottom: 4px solid ${theme.gray};
+			border-radius: 9999px;
 		}
 
 		&::-webkit-slider-thumb {

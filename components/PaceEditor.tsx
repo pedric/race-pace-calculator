@@ -31,7 +31,6 @@ const PaceEditor = ({
 			mode,
 			data.distance,
 		);
-
 		setData({ ...data, hours, minutes, seconds });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state]);
@@ -57,7 +56,7 @@ const PaceEditor = ({
 		setState(newState);
 	};
 
-	const pace = mode === MODE.METRIC ? state.metricPace : state.imperialPace;
+	const pace = mode === MODE.METRIC ? metricPace : imperialPace;
 
 	const isActive = data.distance;
 

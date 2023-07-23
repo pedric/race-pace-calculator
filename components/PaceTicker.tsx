@@ -40,8 +40,8 @@ const PaceTicker = ({
 	return (
 		<StyledPaceTicker>
 			<StyledUnit>
-				{`${isNaN(value) ? 0 : value}${units == UNIT.M ? 'min' : 'sec'}${
-					mode === MODE.METRIC ? ' /km' : ' /mile'
+				{`${isNaN(value) ? 0 : value} ${units == UNIT.M ? 'min' : 'sec'}${
+					mode === MODE.METRIC ? '/km' : '/mile'
 				}`}
 			</StyledUnit>
 			<Control>
@@ -158,6 +158,7 @@ const Value = styled.div`
 			left: 0;
 			z-index: 0;
 			border-bottom: 4px solid ${theme.gray};
+			border-radius: 9999px;
 		}
 
 		&::-webkit-slider-thumb {

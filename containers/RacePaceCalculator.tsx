@@ -144,6 +144,8 @@ const RacePaceCalculator = () => {
 		}
 	};
 
+	const monitorStyle = MONITOR.BOX;
+
 	return (
 		<>
 			<Head>
@@ -156,7 +158,7 @@ const RacePaceCalculator = () => {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<Outer>
+			<Outer monitorStyle={monitorStyle}>
 				<Wrapper>
 					<ResultMonitor
 						data={data}
@@ -166,7 +168,7 @@ const RacePaceCalculator = () => {
 						kmh={kmh}
 						mph={mph}
 						mode={mode}
-						style={MONITOR.BOX}
+						style={monitorStyle}
 					/>
 					<Title>
 						<h2>{'Race calculator'}</h2>
@@ -178,12 +180,6 @@ const RacePaceCalculator = () => {
 							setUnits={setMode}
 						/>
 					</Title>
-					{/* <RaceMenu
-						inputChoice={userMode}
-						setInputChoice={setUserMode}
-						units={mode}
-						setUnits={setMode}
-					/> */}
 					<RaceSelector
 						data={data}
 						handleChange={handleDistanceChange}
@@ -281,13 +277,6 @@ const RacePaceCalculator = () => {
 						</div>
 					) : null}
 				</Wrapper>
-				{/* <Comparison
-					mode={mode}
-					data={data}
-					imperialData={imperialData}
-					metricPace={metricPace}
-					imperialPace={imperialPace}
-				/> */}
 			</Outer>
 		</>
 	);
@@ -327,9 +316,10 @@ const Control = styled.div`
 	width: calc(100% - 66px);
 `;
 
-const Outer = styled.div`
+const Outer = styled.div<any>`
 	font-family: 'Inter', sans-serif;
-	margin: 50px auto 0;
+	margin: ${({ monitorStyle }) =>
+		monitorStyle == MONITOR.BOX ? '1em auto' : '50px auto 0'};
 `;
 
 const Form = styled.form`
@@ -346,12 +336,6 @@ const Wrapper = styled.div`
 	padding: 1em;
 	border-radius: 20px;
 	border: 1px solid ${theme.gray};
-`;
-
-const Sorry = styled.span`
-	color: ${theme.strong};
-	text-transform: uppercase;
-	text-decoration: underline;
 `;
 
 export default RacePaceCalculator;
