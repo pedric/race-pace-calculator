@@ -1,22 +1,26 @@
 import { theme } from '../styles/theme';
 import styled from '@emotion/styled';
-import RacePaceCalculator from '../containers/RacePaceCalculator';
+import { BackDrop } from '../styles/layout';
+import Link from 'next/link';
 
 const Home = () => {
 	return (
 		<BackDrop>
-			<RacePaceCalculator />
+			<Menu>
+				<Link href={'/race-pace-calculator'}>Race calculator</Link>
+				<Link href={'/training-plan'}>training plan</Link>
+				<Link href={'/pace-converter'}>pace-converter</Link>
+				<Link href={'/strava-connect'}>strava-connect</Link>
+			</Menu>
 		</BackDrop>
 	);
 };
 
-const BackDrop = styled.main`
-	background: rgba(0, 0, 0, 0.08);
-	min-height: 100vh;
-	min-width: 100vw;
-	display: flex;
-	justify-content: center;
-	align-items: flex-start;
-`;
+const Menu = styled.nav`
+	font-family: 'inter', sans-serif;
 
+	a {
+		margin: 1em;
+	}
+`;
 export default Home;

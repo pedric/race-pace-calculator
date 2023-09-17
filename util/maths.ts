@@ -9,6 +9,56 @@ export const hoursMinutesAndSecondsToSeconds = (h: any, m: any, s: any) => {
 	return hours + minutes + seconds;
 };
 
+export const minutesToSeconds = (m: any) => {
+	return m * 60;
+};
+
+export const kilometerPerHourPaceBasedOnSecondsOnly = (
+	distance: number,
+	seconds: number,
+) => {
+	return distance / (seconds / 3600);
+};
+
+export const milesPerHourPaceBasedOnSecondsOnly = (
+	distance: number,
+	seconds: number,
+) => {
+	return distance / (seconds / 3600);
+};
+
+export const paceFromKmhPAce = (distance: any, minutes: any) => {
+	return null;
+};
+
+/**
+ *
+ * @param distance (km)
+ * @param minutes
+ * @returns
+ */
+export const paceFromKmh = (speed: any) => {
+	// const totalSeconds = hoursMinutesAndSecondsToSeconds(0, min, sec);
+	// console.log('totalSeconds', totalSeconds);
+	// // Pace (sec/km) = time (sec) / distance (km)
+	// // 3600 sec / 50 km = 72 sec/km
+	// const pace = totalSeconds / distance;
+	// console.log('[pace]', minutesAndSecondsFromSeconds(pace));
+	// const hej = 3600 / speed;
+	return minutesAndSecondsFromSeconds(3600 / Number(speed));
+};
+
+export const paceFromMph = (speed: any) => {
+	// const totalSeconds = hoursMinutesAndSecondsToSeconds(0, min, sec);
+	// console.log('totalSeconds', totalSeconds);
+	// // Pace (sec/km) = time (sec) / distance (km)
+	// // 3600 sec / 50 km = 72 sec/km
+	// const pace = totalSeconds / distance;
+	// console.log('[pace]', minutesAndSecondsFromSeconds(pace));
+	// const hej = 3600 / speed;
+	return minutesAndSecondsFromSeconds(3600 / Number(speed));
+};
+
 export const secondsPerUnitFromSecondsAndDistance = (sec: any, length: any) => {
 	return (parseInt(sec) / parseInt(length)) * 1000;
 };

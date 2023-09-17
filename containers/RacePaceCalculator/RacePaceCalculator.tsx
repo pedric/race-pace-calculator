@@ -1,10 +1,11 @@
-import RaceMenu from '../components/RaceMenu';
+import RaceMenu from '../../components/RaceMenu';
 import styled from '@emotion/styled';
 import Head from 'next/head';
 import Image from 'next/image';
-import { PaceData, Pace } from '../types';
-import distances, { Distance } from '../util/distances';
-import { UNIT, MODE, INPUT, MONITOR } from '../util/constants';
+import { PaceData, Pace } from '../../types';
+import distances, { Distance } from '../../util/distances';
+import { UNIT, MODE, INPUT, MONITOR } from '../../util/constants';
+import { Wrapper } from '../../styles/layout';
 import {
 	paceInKmFromStateData,
 	paceInmilesFromStateData,
@@ -12,16 +13,16 @@ import {
 	milesToMeters,
 	kilometerPerHourPace,
 	milesPerHourPace,
-} from '../util/maths';
+} from '../../util/maths';
 import { useEffect, useState } from 'react';
-import TimeTicker from '../components/TimeTicker';
-import TimeRange from '../components/TimeRange';
-import RaceSelector from '../components/RaceSelector';
-import ResultMonitor from '../components/ResultMonitor';
-import { theme } from '../styles/theme';
-import PaceEditor from '../components/PaceEditor';
-import HeadLine from '../components/HeadLine';
-import Comparison from '../components/Comparison';
+import TimeTicker from '../../components/TimeTicker';
+import TimeRange from '../../components/TimeRange';
+import RaceSelector from '../../components/RaceSelector';
+import ResultMonitor from '../../components/ResultMonitor';
+import { theme } from '../../styles/theme';
+import PaceEditor from '../../components/PaceEditor';
+import HeadLine from '../../components/HeadLine';
+import Comparison from '../../components/Comparison';
 
 const RacePaceCalculator = () => {
 	const initialState: PaceData = {
@@ -69,7 +70,7 @@ const RacePaceCalculator = () => {
 			mode == MODE.METRIC
 				? data.distance
 				: Number(milesToMeters(data.distance));
-		const distance = Number(converted.toFixed(2));
+		// const distance = Number(converted.toFixed(2));
 		// setMetricData({ ...data, distance });
 		setKmh(kilometerPerHourPace(data));
 	};
@@ -327,15 +328,15 @@ const Form = styled.form`
 	gap: 1em;
 `;
 
-const Wrapper = styled.div`
-	position: relative;
-	margin: 0 0.5em;
-	max-width: 460px;
-	width: calc(100vw - 1em);
-	background: ${theme.white};
-	padding: 1em;
-	border-radius: 20px;
-	border: 1px solid ${theme.gray};
-`;
+// const Wrapper = styled.div`
+// 	position: relative;
+// 	margin: 0 0.5em;
+// 	max-width: 460px;
+// 	width: calc(100vw - 1em);
+// 	background: ${theme.white};
+// 	padding: 1em;
+// 	border-radius: 20px;
+// 	border: 1px solid ${theme.gray};
+// `;
 
 export default RacePaceCalculator;

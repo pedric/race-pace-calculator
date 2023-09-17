@@ -19,7 +19,8 @@
     "react-native-radial-slider": "^0.0.4",
     "react-native-svg": "^13.9.0",
     "react-range": "^1.8.14",
-    "react-slider": "^2.0.5"
+    "react-slider": "^2.0.5",
+    "strava-v3": "^2.2.0"
   },
   "devDependencies": {
     "@types/node": "18.7.14",
