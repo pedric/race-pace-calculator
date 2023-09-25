@@ -14,6 +14,9 @@ export type TypeTrainingPlanContext = {
 	name: string;
 	periods: TypePeriod[];
 	weekStartMonday: boolean;
+	someThingIsDragged: boolean;
+	draggedType: string | null;
+	setDraggedType: (type: string | null) => void;
 	addDay: (periodIndex: number, weekIndex: number) => void;
 	addWeek: (periodIndex: number, weekIndex: number) => void;
 	addSession: (
@@ -30,6 +33,7 @@ export type TypeTrainingPlanContext = {
 		splitIndex: number,
 	) => void;
 	addPeriod: () => void;
+	handlePeriodName: (value: string, periodIndex: number) => void;
 	handleSplitName: (
 		value: string,
 		periodIndex: number,
@@ -89,12 +93,16 @@ export type TypeTrainingPlanContext = {
 		weekIndex: number,
 	) => void;
 	handleWeekStart: (startsMonday: boolean) => void;
+	handleDrop: (type: string, data: any, droppedAtIndex: number) => void;
+	handleSomethingIsDragged: (isDragged: boolean) => void;
 };
 
 const initialState: TypeTrainingPlanContext = {
 	name: '',
 	periods: [defaultPeriod()],
 	weekStartMonday: true,
+	someThingIsDragged: false,
+	draggedType: null,
 	addDay: () => {},
 	addWeek: () => {},
 	addSession: () => {},
@@ -109,6 +117,10 @@ const initialState: TypeTrainingPlanContext = {
 	handleSplitUnit: () => {},
 	handleSplitTime: () => {},
 	handleSplitDistance: () => {},
+	handleDrop: () => {},
+	handleSomethingIsDragged: () => {},
+	setDraggedType: () => {},
+	handlePeriodName: () => {},
 };
 
 export const TrainingplanContext =
@@ -121,6 +133,13 @@ interface Props {
 export const TrainingPlanProvider = ({ children }: Props) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
+	const setDraggedType = (type: string | null) => {
+		dispatch({
+			type: 'SET_DRAGGED_TYPE',
+			payload: { type },
+		});
+	};
+
 	const addDay = (periodIndex: number, weekIndex: number) => {
 		console.log('add day');
 		dispatch({
@@ -130,7 +149,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 	};
 
 	const addWeek = (periodIndex: number, weekIndex: number) => {
-		console.log('add day');
+		console.log('add week');
 		dispatch({
 			type: 'ADD_WEEK',
 			payload: { periodIndex, weekIndex },
@@ -274,6 +293,16 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
+	const handlePeriodName = (value: string, periodIndex: number) => {
+		dispatch({
+			type: 'EDIT_PERIOD_NAME',
+			payload: {
+				value,
+				periodIndex,
+			},
+		});
+	};
+
 	const handleSessionName = (
 		value: string,
 		periodIndex: number,
@@ -329,17 +358,43 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		dispatch({ type: 'CHANGE_WEEK_START', payload: { startsMonday } });
 	};
 
+	const handleSomethingIsDragged = (isDragged: boolean) => {
+		dispatch({ type: 'SET_SOMETHING_IS_DRAGGED', payload: { isDragged } });
+	};
+
+	const handleDrop = (type: string, data: any, droppedAtIndex: number) => {
+		console.log('drop type', type);
+		console.log('drop data', data);
+		console.log('drop droppedAtIndex', droppedAtIndex);
+		if (!data) return;
+		if (type === 'SPLIT') {
+			dispatch({ type: 'DROP_SPLIT', payload: { data, droppedAtIndex } });
+		}
+		if (type === 'SESSION') {
+			dispatch({ type: 'DROP_SESSION', payload: { data, droppedAtIndex } });
+		}
+		if (type === 'DAY') {
+			dispatch({ type: 'DROP_DAY', payload: { data, droppedAtIndex } });
+		}
+		if (type === 'WEEK') {
+			dispatch({ type: 'DROP_WEEK', payload: { data, droppedAtIndex } });
+		}
+	};
+
 	return (
 		<TrainingplanContext.Provider
 			value={{
 				name: state.name,
 				periods: state.periods,
 				weekStartMonday: state.weekStartMonday,
+				someThingIsDragged: state.someThingIsDragged,
+				draggedType: state.draggedType,
 				addDay,
 				addWeek,
 				addSession,
 				addSplit,
 				addPeriod,
+				handlePeriodName,
 				handleSplitName,
 				handleSessionName,
 				handleDayName,
@@ -349,6 +404,9 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 				handleSplitUnit,
 				handleSplitTime,
 				handleSplitDistance,
+				handleDrop,
+				handleSomethingIsDragged,
+				setDraggedType,
 			}}
 		>
 			{children}

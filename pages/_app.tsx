@@ -1,11 +1,14 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { TrainingPlanProvider } from '../context/traininplan/TrainingPlanContext';
+import DragAndDropcontext from '../context/traininplan/DragAndDropcontext';
 
 function App({ Component, pageProps }: AppProps) {
 	return (
 		<TrainingPlanProvider>
-			<Component {...pageProps} />
+			<DragAndDropcontext>
+				<Component {...pageProps} />
+			</DragAndDropcontext>
 		</TrainingPlanProvider>
 	);
 }

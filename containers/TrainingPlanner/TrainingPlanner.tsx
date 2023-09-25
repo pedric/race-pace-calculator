@@ -1,4 +1,5 @@
 import { useEffect, useState, useReducer, useContext } from 'react';
+// import { DndContext, useDndMonitor } from '@dnd-kit/core';
 import {
 	TrainingplanContext,
 	TypeTrainingPlanContext,
@@ -16,6 +17,7 @@ import TrainingDays from '../../features/TrainingDays';
 import TrainingWeek from '../../features/TrainingWeek';
 import TrainingPeriod from '../../features/TrainingPeriod';
 import styled from '@emotion/styled';
+import TrainingPlannerMenu from '../../components/TrainingPlannerMenu';
 
 import {
 	TypeTrainingPlanState,
@@ -46,6 +48,7 @@ const TrainingPlanner = () => {
 		name,
 		periods,
 		weekStartMonday,
+		someThingIsDragged,
 		addDay,
 		addPeriod,
 		addSession,
@@ -70,26 +73,16 @@ const TrainingPlanner = () => {
 		// console.log(periods);
 	}, [periods]);
 
-	const weekDaySet = weekStartMonday ? weekDays : weekDaysStartOnsunday; //TODO: move to context
+	const weekDaySet = weekStartMonday ? weekDays : weekDaysStartOnsunday;
+
+	console.log('someThingIsDragged', someThingIsDragged);
 
 	return (
-		<Wrapper>
-			<div>
-				<WeekdayButton
-					role='button'
-					onClick={() => handleWeekStart(true)}
-					active={weekStartMonday}
-				>
-					Week starts with monday
-				</WeekdayButton>
-				<WeekdayButton
-					role='button'
-					onClick={() => handleWeekStart(false)}
-					active={!weekStartMonday}
-				>
-					Week starts with sunday
-				</WeekdayButton>
-			</div>
+		<Wrapper someThingIsDragged={someThingIsDragged}>
+			<TrainingPlannerMenu
+				weekStartMonday={weekStartMonday}
+				handleWeekStart={handleWeekStart}
+			/>
 			{periods &&
 				periods.map((trainingPeriod: TypePeriod, periodIndex: number) => (
 					<TrainingPeriod
@@ -99,18 +92,18 @@ const TrainingPlanner = () => {
 						weekDaySet={weekDaySet}
 					/>
 				))}
+			<button onClick={() => console.log(periods)}>DEBUG STATE</button>
 		</Wrapper>
 	);
 };
 
-const Wrapper = styled.div`
-	border: 2px dashed black;
-	min-width: 300px;
-`;
-
-const WeekdayButton = styled.span<any>`
-	border: 2px dashed black;
-	background: ${({ active }) => (active ? 'pink' : 'white')};
+const Wrapper = styled.div<any>`
+	margin: 1em auto;
+	width: 630px;
+	max-width: 96%;
+	font-family: 'Inter', sans-serif;
+	background: ${({ someThingIsDragged }) =>
+		someThingIsDragged ? 'red' : 'transparent'};
 `;
 
 export default TrainingPlanner;

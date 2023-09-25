@@ -129,6 +129,20 @@ const reducer = (state: any, action: any) => {
 		return { ...newState };
 	}
 
+	if (action.type === 'SET_DRAGGED_TYPE') {
+		const newState = { ...state };
+		const { type } = action.payload;
+
+		return { ...newState, draggedType: type };
+	}
+
+	if (action.type === 'EDIT_PERIOD_NAME') {
+		const newState = { ...state };
+		const { value, periodIndex } = action.payload;
+		newState.periods[periodIndex].name = value;
+		return { ...newState };
+	}
+
 	if (action.type === 'EDIT_SESSION_NAME') {
 		const newState = { ...state };
 		const { value, periodIndex, weekIndex, dayIndex, sessionIndex } =
@@ -156,6 +170,83 @@ const reducer = (state: any, action: any) => {
 	if (action.type === 'CHANGE_WEEK_START') {
 		const { startsMonday } = action.payload;
 		return { ...state, weekStartMonday: startsMonday };
+	}
+
+	if (action.type === 'SET_SOMETHING_IS_DRAGGED') {
+		const { isDragged } = action.payload;
+		return { ...state, someThingIsDragged: isDragged };
+	}
+
+	if (action.type === 'DROP_SPLIT') {
+		const newState = { ...state };
+
+		const {
+			dayIndex,
+			periodIndex,
+			sessionIndex,
+			split,
+			splitIndex,
+			weekIndex,
+		} = action.payload.data;
+
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
+			sessionIndex
+		].splits.splice(splitIndex, 1);
+
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
+			sessionIndex
+		].splits.splice(action.payload.droppedAtIndex, 0, split);
+
+		return { ...newState };
+	}
+
+	if (action.type === 'DROP_SESSION') {
+		const newState = { ...state };
+
+		const { dayIndex, periodIndex, sessionIndex, session, weekIndex } =
+			action.payload.data;
+
+		newState.periods[periodIndex].plan[weekIndex].days[
+			dayIndex
+		].sessions.splice(sessionIndex, 1);
+
+		newState.periods[periodIndex].plan[weekIndex].days[
+			dayIndex
+		].sessions.splice(action.payload.droppedAtIndex, 0, session);
+
+		return { ...newState };
+	}
+
+	if (action.type === 'DROP_DAY') {
+		const newState = { ...state };
+
+		const { dayIndex, periodIndex, day, weekIndex } = action.payload.data;
+
+		newState.periods[periodIndex].plan[weekIndex].days.splice(dayIndex, 1);
+
+		newState.periods[periodIndex].plan[weekIndex].days.splice(
+			action.payload.droppedAtIndex,
+			0,
+			day,
+		);
+
+		return { ...newState };
+	}
+
+	if (action.type === 'DROP_WEEK') {
+		const newState = { ...state };
+
+		const { periodIndex, weekIndex, week } = action.payload.data;
+
+		newState.periods[periodIndex].plan.splice(weekIndex, 1);
+
+		newState.periods[periodIndex].plan.splice(
+			action.payload.droppedAtIndex,
+			0,
+			week,
+		);
+
+		return { ...newState };
 	}
 
 	console.log('Unknown action.');

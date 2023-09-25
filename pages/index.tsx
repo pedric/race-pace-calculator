@@ -10,7 +10,6 @@ const Home = () => {
 				<Link href={'/race-pace-calculator'}>Race calculator</Link>
 				<Link href={'/training-plan'}>training plan</Link>
 				<Link href={'/pace-converter'}>pace-converter</Link>
-				<Link href={'/strava-connect'}>strava-connect</Link>
 			</Menu>
 		</BackDrop>
 	);

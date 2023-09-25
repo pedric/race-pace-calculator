@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, Fragment } from 'react';
 import { TypeSessionSplit, TypeSession, TypeDay } from '../types';
 import Splits from './Splits';
 import Sessions from './Sessions';
@@ -15,6 +15,8 @@ import {
 	TrainingplanContext,
 } from '../context/traininplan/TrainingPlanContext';
 import styled from '@emotion/styled';
+import DropZone from '../components/dropZone';
+import DraggableContainer from '../components/DraggableContainer';
 
 type Props = {
 	days: TypeDay[];
@@ -36,9 +38,35 @@ const TrainingDays = ({ days, periodIndex, weekIndex, weekDaySet }: Props) => {
 		handleSessionName,
 		handleSplitName,
 		handleWeekName,
+		handleDrop,
 	} = useContext<TypeTrainingPlanContext>(TrainingplanContext);
 
-	const [open, setOpen] = useState<boolean>(false);
+	const [open, setOpen] = useState<number[]>([]);
+
+	const [dragData, setDraggedData] = useState<any>(null);
+
+	const handleOpenDays = (idx: number) => {
+		if (open.some((n) => n === idx)) {
+			const newOpen = open.filter((n) => n !== idx);
+			setOpen(newOpen);
+		} else {
+			const newOpen = [...open];
+			newOpen.push(idx);
+			setOpen(newOpen);
+		}
+	};
+
+	const isOpen = (n: number) => {
+		return open.some((_) => _ == n) ? true : false;
+	};
+
+	const onDropFunction = (data: any, index: number) => {
+		handleDrop('DAY', data, index);
+	};
+
+	const onDragStartFunction = (data: any) => {
+		setDraggedData(data);
+	};
 
 	return (
 		<>
@@ -53,38 +81,116 @@ const TrainingDays = ({ days, periodIndex, weekIndex, weekDaySet }: Props) => {
 					});
 				});
 				return (
-					<StyledDay key={dayIndex}>
-						{dayName && <div>{dayName}</div>}
-						<div onClick={() => setOpen(!open)}>
-							toggle day
-							<Icon icon={open ? 'chevron-down' : 'chevron-up'} />
-						</div>
-						{restDay && <p>REST DAY</p>}
-						<input
-							type='text'
-							value={day.name}
-							onChange={(e) =>
-								handleDayName(e.target.value, periodIndex, weekIndex, dayIndex)
-							}
+					<Fragment key={dayIndex}>
+						<DropZone
+							type={'DAY'}
+							index={dayIndex}
+							data={dragData}
+							onDropFunction={onDropFunction}
 						/>
-						<div>
-							<Sessions
-								sessions={day.sessions}
-								periodIndex={periodIndex}
-								weekIndex={weekIndex}
-								dayIndex={dayIndex}
-							/>
+						<DraggableContainer
+							periodIndex={periodIndex}
+							index={dayIndex}
+							open={isOpen(dayIndex)}
+							type={'DAY'}
+							data={{
+								periodIndex,
+								weekIndex,
+								dayIndex,
+								day,
+							}}
+							buttonText={'Move day'}
+							onDragStartFunction={onDragStartFunction}
+						>
+							<StyledDay restDay={restDay}>
+								{dayName && <div>{dayName}</div>}
+								{/* <div onClick={() => handleOpenDays(dayIndex)}>
+									toggle day
+									<Icon
+										icon={isOpen(dayIndex) ? 'chevron-down' : 'chevron-up'}
+									/>
+								</div> */}
+								{restDay && <p>REST DAY</p>}
+								{/* {isOpen(dayIndex) && (
+									<div>
+										<input
+											type='text'
+											value={day.name}
+											onChange={(e) =>
+												handleDayName(
+													e.target.value,
+													periodIndex,
+													weekIndex,
+													dayIndex,
+												)
+											}
+										/>
+										<div>
+											<Sessions
+												sessions={day.sessions}
+												periodIndex={periodIndex}
+												weekIndex={weekIndex}
+												dayIndex={dayIndex}
+											/>
+										</div>
+									</div>
+								)} */}
+								<div onClick={() => handleOpenDays(dayIndex)}>
+									toggle day tabindex test
+									<Icon
+										icon={isOpen(dayIndex) ? 'chevron-down' : 'chevron-up'}
+									/>
+								</div>
+							</StyledDay>
+						</DraggableContainer>
+						<div onClick={() => handleOpenDays(dayIndex)}>
+							toggle day
+							<Icon icon={isOpen(dayIndex) ? 'chevron-down' : 'chevron-up'} />
 						</div>
-					</StyledDay>
+						{isOpen(dayIndex) && (
+							<>
+								<div>
+									<input
+										type='text'
+										value={day.name}
+										onChange={(e) =>
+											handleDayName(
+												e.target.value,
+												periodIndex,
+												weekIndex,
+												dayIndex,
+											)
+										}
+									/>
+									<div>
+										<Sessions
+											sessions={day.sessions}
+											periodIndex={periodIndex}
+											weekIndex={weekIndex}
+											dayIndex={dayIndex}
+										/>
+									</div>
+								</div>
+								{/* <div>
+									<Sessions
+										sessions={day.sessions}
+										periodIndex={periodIndex}
+										weekIndex={weekIndex}
+										dayIndex={dayIndex}
+									/>
+								</div> */}
+							</>
+						)}
+					</Fragment>
 				);
 			})}
 		</>
 	);
 };
 
-const StyledDay = styled.div`
+const StyledDay = styled.div<any>`
 	// display: grid;
-	background: #fff;
+	background: ${({ restDay }) => (restDay ? '#ccc' : '#fff')};
 	border: 1px solid crimson;
 `;
 

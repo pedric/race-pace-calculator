@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, Fragment } from 'react';
 import { TypeSessionSplit, TypeSession } from '../types';
 import Splits from './Splits';
 import {
@@ -13,6 +13,9 @@ import {
 	TrainingplanContext,
 } from '../context/traininplan/TrainingPlanContext';
 import styled from '@emotion/styled';
+import DropZone from '../components/dropZone';
+import DraggableContainer from '../components/DraggableContainer';
+import Icon from '../components/Icon';
 
 type Props = {
 	sessions: TypeSession[];
@@ -34,41 +37,141 @@ const Sessions = ({ sessions, periodIndex, weekIndex, dayIndex }: Props) => {
 		handleSessionName,
 		handleSplitName,
 		handleWeekName,
+		handleDrop,
 	} = useContext<TypeTrainingPlanContext>(TrainingplanContext);
+
+	const [dragData, setDraggedData] = useState<any>(null);
+	const [open, setOpen] = useState<number[]>([]);
+
+	const handleOpenSessions = (idx: number) => {
+		if (open.some((n) => n === idx)) {
+			const newOpen = open.filter((n) => n !== idx);
+			setOpen(newOpen);
+		} else {
+			const newOpen = [...open];
+			newOpen.push(idx);
+			setOpen(newOpen);
+		}
+	};
+
+	const isOpen = (n: number) => {
+		return open.some((_) => _ == n) ? true : false;
+	};
+
+	const onDropFunction = (data: any, index: number) => {
+		handleDrop('SESSION', data, index);
+	};
+
+	const onDragStartFunction = (data: any) => {
+		setDraggedData(data);
+	};
 
 	return (
 		<>
 			{sessions.map((session: TypeSession, sessionIndex: number) => {
 				return (
-					<StyledSession key={sessionIndex}>
-						<input
-							type='text'
-							value={session.name}
-							onChange={(e) =>
-								handleSessionName(
-									e.target.value,
-									periodIndex,
-									weekIndex,
-									dayIndex,
-									sessionIndex,
-								)
-							}
+					<Fragment key={sessionIndex}>
+						<DropZone
+							type={'SESSION'}
+							index={sessionIndex}
+							data={dragData}
+							onDropFunction={onDropFunction}
 						/>
-						<Splits
-							splits={session.splits}
+						<DraggableContainer
 							periodIndex={periodIndex}
-							weekIndex={weekIndex}
-							sessionIndex={sessionIndex}
-							dayIndex={dayIndex}
-						/>
-						<p
-							onClick={() =>
-								addSession(periodIndex, weekIndex, dayIndex, sessionIndex)
-							}
+							index={sessionIndex}
+							open={isOpen(sessionIndex)}
+							type={'SESSION'}
+							data={{
+								periodIndex,
+								weekIndex,
+								dayIndex,
+								sessionIndex,
+								session,
+							}}
+							buttonText={'Move session'}
+							onDragStartFunction={onDragStartFunction}
 						>
-							En till session
-						</p>
-					</StyledSession>
+							{/* <div onClick={() => handleOpenSessions(sessionIndex)}>
+								toggle session
+								<Icon
+									icon={isOpen(sessionIndex) ? 'chevron-down' : 'chevron-up'}
+								/>
+							</div> */}
+							{/* {isOpen(sessionIndex) && (
+								<StyledSession>
+									<label>session name</label>
+									<input
+										type='text'
+										value={session.name}
+										onChange={(e) =>
+											handleSessionName(
+												e.target.value,
+												periodIndex,
+												weekIndex,
+												dayIndex,
+												sessionIndex,
+											)
+										}
+									/>
+									<Splits
+										splits={session.splits}
+										periodIndex={periodIndex}
+										weekIndex={weekIndex}
+										sessionIndex={sessionIndex}
+										dayIndex={dayIndex}
+									/>
+								</StyledSession> */}
+							{/* )} */}
+							<p
+								onClick={() =>
+									addSession(periodIndex, weekIndex, dayIndex, sessionIndex)
+								}
+							>
+								En till session
+							</p>
+						</DraggableContainer>
+						<div onClick={() => handleOpenSessions(sessionIndex)}>
+							toggle session
+							<Icon
+								icon={isOpen(sessionIndex) ? 'chevron-down' : 'chevron-up'}
+							/>
+						</div>
+						{isOpen(sessionIndex) && (
+							<>
+								<StyledSession>
+									<label>session name</label>
+									<input
+										type='text'
+										value={session.name}
+										onChange={(e) =>
+											handleSessionName(
+												e.target.value,
+												periodIndex,
+												weekIndex,
+												dayIndex,
+												sessionIndex,
+											)
+										}
+									/>
+									<Splits
+										splits={session.splits}
+										periodIndex={periodIndex}
+										weekIndex={weekIndex}
+										sessionIndex={sessionIndex}
+										dayIndex={dayIndex}
+									/>
+								</StyledSession>
+								{/* <Splits
+									splits={session.splits}
+									periodIndex={periodIndex}
+									weekIndex={weekIndex}
+									sessionIndex={sessionIndex}
+									dayIndex={dayIndex}
+								/> */}
+							</>
+						)}
+					</Fragment>
 				);
 			})}
 		</>

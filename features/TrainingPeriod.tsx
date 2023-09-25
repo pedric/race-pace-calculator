@@ -43,9 +43,11 @@ const TrainingPeriod = ({ trainingPeriod, periodIndex, weekDaySet }: Props) => {
 		handleSessionName,
 		handleSplitName,
 		handleWeekName,
+		handlePeriodName,
 	} = useContext<TypeTrainingPlanContext>(TrainingplanContext);
 
 	const [open, setOpen] = useState<boolean>(false);
+	const [dragData, setDraggedData] = useState<any>(null);
 
 	return (
 		<>
@@ -55,20 +57,50 @@ const TrainingPeriod = ({ trainingPeriod, periodIndex, weekDaySet }: Props) => {
 					toggle period
 					<Icon icon={open ? 'chevron-down' : 'chevron-up'} />
 				</div>
-				<div>
-					{trainingPeriod?.plan
-						? trainingPeriod.plan.map((week: TypeWeek, weekIndex: number) => (
-								<TrainingWeek
-									key={weekIndex}
-									week={week}
-									periodIndex={periodIndex}
-									weekIndex={weekIndex}
-									weekDaySet={weekDaySet}
-								/>
-						  ))
-						: null}
-				</div>
+				{open && (
+					<>
+						<div>
+							<label>Period name</label>
+							<input
+								type='text'
+								onChange={(e) => handlePeriodName(e.target.value, periodIndex)}
+							/>
+						</div>
+						<div>
+							{trainingPeriod?.plan
+								? trainingPeriod.plan.map(
+										(week: TypeWeek, weekIndex: number) => (
+											<TrainingWeek
+												key={weekIndex}
+												week={week}
+												periodIndex={periodIndex}
+												weekIndex={weekIndex}
+												weekDaySet={weekDaySet}
+												dragData={dragData}
+												setDraggedData={setDraggedData}
+											/>
+										),
+								  )
+								: null}
+						</div>
+					</>
+				)}
 			</StyledPeriod>
+			{/* <div>
+				{trainingPeriod?.plan
+					? trainingPeriod.plan.map((week: TypeWeek, weekIndex: number) => (
+							<TrainingWeek
+								key={weekIndex}
+								week={week}
+								periodIndex={periodIndex}
+								weekIndex={weekIndex}
+								weekDaySet={weekDaySet}
+								dragData={dragData}
+								setDraggedData={setDraggedData}
+							/>
+					  ))
+					: null}
+			</div> */}
 
 			<p onClick={() => addPeriod()}>En till period</p>
 		</>

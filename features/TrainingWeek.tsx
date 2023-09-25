@@ -16,15 +16,26 @@ import {
 	TrainingplanContext,
 } from '../context/traininplan/TrainingPlanContext';
 import styled from '@emotion/styled';
+import DropZone from '../components/dropZone';
+import DraggableContainer from '../components/DraggableContainer';
 
 type Props = {
 	week: TypeWeek;
 	periodIndex: number;
 	weekIndex: number;
 	weekDaySet: string[];
+	dragData: any;
+	setDraggedData: (data: any) => void;
 };
 
-const TrainingWeeks = ({ week, periodIndex, weekIndex, weekDaySet }: Props) => {
+const TrainingWeeks = ({
+	week,
+	periodIndex,
+	weekIndex,
+	weekDaySet,
+	dragData,
+	setDraggedData,
+}: Props) => {
 	const {
 		name,
 		periods,
@@ -37,41 +48,87 @@ const TrainingWeeks = ({ week, periodIndex, weekIndex, weekDaySet }: Props) => {
 		handleSessionName,
 		handleSplitName,
 		handleWeekName,
+		handleDrop,
 	} = useContext<TypeTrainingPlanContext>(TrainingplanContext);
 
 	const [open, setOpen] = useState<boolean>(false);
+
+	const onDropFunction = (data: any, index: number) => {
+		handleDrop('WEEK', data, index);
+	};
+
+	const onDragStartFunction = (data: any) => {
+		setDraggedData(data);
+	};
 
 	const weekIsFull = week.days.length == 7;
 
 	return (
 		<>
-			<StyledWeek key={weekIndex}>
-				vecka
-				<input
-					type='text'
-					value={week.name}
-					onChange={(e) =>
-						handleWeekName(e.target.value, periodIndex, weekIndex)
-					}
-				/>
+			<DropZone
+				type={'WEEK'}
+				index={weekIndex}
+				data={dragData}
+				onDropFunction={onDropFunction}
+			/>
+			<DraggableContainer
+				periodIndex={periodIndex}
+				index={weekIndex}
+				open={open}
+				type={'WEEK'}
+				data={{
+					periodIndex: periodIndex,
+					weekIndex: weekIndex,
+					week: week,
+				}}
+				buttonText={'Move week'}
+				onDragStartFunction={onDragStartFunction}
+			>
 				<div onClick={() => setOpen(!open)}>
 					toggle vecka
 					<Icon icon={open ? 'chevron-down' : 'chevron-up'} />
 				</div>
-				<TrainingDays
-					days={week.days}
-					periodIndex={periodIndex}
-					weekIndex={weekIndex}
-					weekDaySet={weekDaySet}
-				/>
-				{!weekIsFull ? (
-					<div onClick={() => addDay(periodIndex, weekIndex)}>
-						en till dag
-						<Icon icon={'plus'} />
-					</div>
-				) : null}
-				<p onClick={() => addWeek(periodIndex, weekIndex)}>En till vecka</p>
-			</StyledWeek>
+				{open && (
+					<StyledWeek key={weekIndex}>
+						vecka {weekIndex}
+						<input
+							type='text'
+							value={week.name}
+							onChange={(e) =>
+								handleWeekName(e.target.value, periodIndex, weekIndex)
+							}
+						/>
+						<TrainingDays
+							days={week.days}
+							periodIndex={periodIndex}
+							weekIndex={weekIndex}
+							weekDaySet={weekDaySet}
+						/>
+						{!weekIsFull ? (
+							<div onClick={() => addDay(periodIndex, weekIndex)}>
+								en till dag
+								<Icon icon={'plus'} />
+							</div>
+						) : null}
+					</StyledWeek>
+				)}
+			</DraggableContainer>
+			<div onClick={() => setOpen(!open)}>
+				toggle vecka
+				<Icon icon={open ? 'chevron-down' : 'chevron-up'} />
+			</div>
+			{!weekIsFull ? (
+				<div onClick={() => addDay(periodIndex, weekIndex)}>
+					en till dag
+					<Icon icon={'plus'} />
+				</div>
+			) : null}
+			{/* <TrainingDays
+				days={week.days}
+				periodIndex={periodIndex}
+				weekIndex={weekIndex}
+				weekDaySet={weekDaySet}
+			/> */}
 			<p onClick={() => addWeek(periodIndex, weekIndex)}>En till vecka</p>
 		</>
 	);
