@@ -15,6 +15,7 @@ import styled from '@emotion/styled';
 import DropZone from '../components/dropZone';
 import DraggableContainer from '../components/DraggableContainer';
 import Icon from '../components/Icon';
+import SortableContainer, { ListItem } from '../components/SortableContainer';
 
 type Props = {
 	splits: TypeSessionSplit[];
@@ -107,91 +108,105 @@ const Splits = ({
 		setDraggedData(data);
 	};
 
+	const identifiers = splits.map(
+		(split: TypeSessionSplit, splitIndex: number) =>
+			`SPLIT_${periodIndex}_${weekIndex}_${dayIndex}_${sessionIndex}_${splitIndex}`,
+	);
+
 	return (
-		<>
+		<SortableContainer identifiers={identifiers}>
 			{splits.map((split: TypeSessionSplit, splitIndex: number) => {
 				const isMeasuerdByTime = split.unit == 'Minutes';
 				return (
-					<Fragment key={splitIndex}>
-						<DropZone
-							type={'SPLIT'}
-							index={splitIndex}
-							data={dragData}
-							onDropFunction={onDropFunction}
-						/>
+					<ListItem
+						identifier={`SPLIT_${periodIndex}_${weekIndex}_${dayIndex}_${sessionIndex}_${splitIndex}`}
+						key={splitIndex}
+						type={'SPLIT'}
+						index={splitIndex}
+						data={{
+							periodIndex,
+							weekIndex,
+							dayIndex,
+							sessionIndex,
+							splitIndex,
+							split,
+						}}
+					>
 						<div>
-							<DraggableContainer
-								periodIndex={periodIndex}
-								index={splitIndex}
-								open={isOpen(splitIndex)}
-								type={'SPLIT'}
-								data={{
-									periodIndex,
-									weekIndex,
-									dayIndex,
-									sessionIndex,
-									splitIndex,
-									split,
-								}}
-								buttonText={'Move day'}
-								onDragStartFunction={onDragStartFunction}
-							>
-								<p>draggeli</p>
-							</DraggableContainer>
-							<div onClick={() => handleOpenSplits(splitIndex)}>
+							{/* <div onClick={() => handleOpenSplits(splitIndex)}>
 								toggle split
 								<Icon
 									icon={isOpen(splitIndex) ? 'chevron-down' : 'chevron-up'}
 								/>
-							</div>
-							{isOpen(splitIndex) && (
-								<StyledSplit>
-									<small>Name</small>
-									<input
-										type='text'
-										value={split.name}
-										onChange={(e) =>
-											handleSplitName(
-												e.target.value,
-												periodIndex,
-												weekIndex,
-												dayIndex,
-												sessionIndex,
-												splitIndex,
-											)
-										}
-									/>
-									<small>intensity</small>
-									<p>I am {split.intensity}</p>
-									<select
-										defaultValue={split.intensity}
-										onChange={(e) => {
-											handleSplitType(
-												daytypes[e.target.selectedIndex],
-												periodIndex,
-												weekIndex,
-												dayIndex,
-												sessionIndex,
-												splitIndex,
-											);
-										}}
-									>
-										{daytypes.map((splitType: string, idx) => (
-											<option key={idx} value={splitType}>
-												{splitType}
-											</option>
-										))}
-									</select>
-									<div>
-										<small>Set units</small>
-										{units.map((_: string, idx: number) => (
-											<UnitButton
-												key={idx}
-												role='button'
-												active={_ == split.unit}
-												onClick={() =>
-													handleSplitUnit(
-														_,
+							</div> */}
+
+							<StyledSplit>
+								<small>Name</small>
+								<input
+									type='text'
+									value={split.name}
+									onChange={(e) =>
+										handleSplitName(
+											e.target.value,
+											periodIndex,
+											weekIndex,
+											dayIndex,
+											sessionIndex,
+											splitIndex,
+										)
+									}
+								/>
+								<small>intensity</small>
+								<p>I am {split.intensity}</p>
+								<select
+									defaultValue={split.intensity}
+									onChange={(e) => {
+										handleSplitType(
+											daytypes[e.target.selectedIndex],
+											periodIndex,
+											weekIndex,
+											dayIndex,
+											sessionIndex,
+											splitIndex,
+										);
+									}}
+								>
+									{daytypes.map((splitType: string, idx) => (
+										<option key={idx} value={splitType}>
+											{splitType}
+										</option>
+									))}
+								</select>
+								<div>
+									<small>Set units</small>
+									{units.map((_: string, idx: number) => (
+										<UnitButton
+											key={idx}
+											role='button'
+											active={_ == split.unit}
+											onClick={() =>
+												handleSplitUnit(
+													_,
+													periodIndex,
+													weekIndex,
+													dayIndex,
+													sessionIndex,
+													splitIndex,
+												)
+											}
+										>
+											{_}
+										</UnitButton>
+									))}
+									{isMeasuerdByTime && (
+										<>
+											<small>Minutes</small>
+											<input
+												type='number'
+												value={split.minutes}
+												onChange={(e) =>
+													handleSplitTime(
+														e.target.value,
 														periodIndex,
 														weekIndex,
 														dayIndex,
@@ -199,58 +214,37 @@ const Splits = ({
 														splitIndex,
 													)
 												}
-											>
-												{_}
-											</UnitButton>
-										))}
-										{isMeasuerdByTime && (
-											<>
-												<small>Minutes</small>
-												<input
-													type='number'
-													value={split.minutes}
-													onChange={(e) =>
-														handleSplitTime(
-															e.target.value,
-															periodIndex,
-															weekIndex,
-															dayIndex,
-															sessionIndex,
-															splitIndex,
-														)
-													}
-												/>
-											</>
-										)}
-										{!isMeasuerdByTime && (
-											<>
-												<small>Distance</small>
-												<input
-													type='number'
-													value={split.distance}
-													onChange={(e) =>
-														handleSplitDistance(
-															e.target.value,
-															periodIndex,
-															weekIndex,
-															dayIndex,
-															sessionIndex,
-															splitIndex,
-														)
-													}
-												/>
-											</>
-										)}
-									</div>
-								</StyledSplit>
-							)}
+											/>
+										</>
+									)}
+									{!isMeasuerdByTime && (
+										<>
+											<small>Distance</small>
+											<input
+												type='number'
+												value={split.distance}
+												onChange={(e) =>
+													handleSplitDistance(
+														e.target.value,
+														periodIndex,
+														weekIndex,
+														dayIndex,
+														sessionIndex,
+														splitIndex,
+													)
+												}
+											/>
+										</>
+									)}
+								</div>
+							</StyledSplit>
 
-							<div onClick={() => handleOpenSplits(splitIndex)}>
+							{/* <div onClick={() => handleOpenSplits(splitIndex)}>
 								toggle split
 								<Icon
 									icon={isOpen(splitIndex) ? 'chevron-down' : 'chevron-up'}
 								/>
-							</div>
+							</div> */}
 							<p
 								onClick={() =>
 									addSplit(
@@ -265,10 +259,10 @@ const Splits = ({
 								En till split
 							</p>
 						</div>
-					</Fragment>
+					</ListItem>
 				);
 			})}
-		</>
+		</SortableContainer>
 	);
 };
 

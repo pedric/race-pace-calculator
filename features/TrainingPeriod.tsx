@@ -23,6 +23,7 @@ import {
 	TrainingplanContext,
 } from '../context/traininplan/TrainingPlanContext';
 import styled from '@emotion/styled';
+import SortableContainer, { ListItem } from '../components/SortableContainer';
 
 type Props = {
 	trainingPeriod: TypePeriod;
@@ -49,43 +50,105 @@ const TrainingPeriod = ({ trainingPeriod, periodIndex, weekDaySet }: Props) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const [dragData, setDraggedData] = useState<any>(null);
 
+	const identifiers = trainingPeriod?.plan
+		? trainingPeriod.plan.map(
+				(week: TypeWeek, weekIndex: number) =>
+					`WEEK_${periodIndex}_${weekIndex}`,
+		  )
+		: null;
+
+	const weeks = identifiers ? (
+		<SortableContainer identifiers={identifiers}>
+			{trainingPeriod?.plan
+				? trainingPeriod.plan.map((week: TypeWeek, weekIndex: number) => (
+						<ListItem
+							key={weekIndex}
+							index={weekIndex}
+							identifier={`WEEK_${periodIndex}_${weekIndex}`}
+							type={'WEEK'}
+							data={{ periodIndex, weekIndex, week }}
+						>
+							<TrainingWeek
+								week={week}
+								periodIndex={periodIndex}
+								weekIndex={weekIndex}
+								weekDaySet={weekDaySet}
+								dragData={dragData}
+								setDraggedData={setDraggedData}
+							/>
+						</ListItem>
+				  ))
+				: null}
+		</SortableContainer>
+	) : null;
+
 	return (
 		<>
 			<StyledPeriod>
-				en period
-				<div role='button' onClick={() => setOpen(!open)}>
+				{/* <div role='button' onClick={() => setOpen(!open)}>
 					toggle period
 					<Icon icon={open ? 'chevron-down' : 'chevron-up'} />
-				</div>
-				{open && (
-					<>
-						<div>
-							<label>Period name</label>
-							<input
-								type='text'
-								onChange={(e) => handlePeriodName(e.target.value, periodIndex)}
-							/>
-						</div>
-						<div>
-							{trainingPeriod?.plan
-								? trainingPeriod.plan.map(
-										(week: TypeWeek, weekIndex: number) => (
-											<TrainingWeek
-												key={weekIndex}
-												week={week}
-												periodIndex={periodIndex}
-												weekIndex={weekIndex}
-												weekDaySet={weekDaySet}
-												dragData={dragData}
-												setDraggedData={setDraggedData}
-											/>
-										),
-								  )
-								: null}
-						</div>
-					</>
-				)}
+				</div> */}
+				<>
+					<div>
+						<label>Period name</label>
+						<input
+							type='text'
+							value={trainingPeriod.name}
+							onChange={(e) => handlePeriodName(e.target.value, periodIndex)}
+						/>
+					</div>
+					{/* {identifiers && (
+							<SortableContainer identifiers={identifiers}>
+								{trainingPeriod?.plan
+									? trainingPeriod.plan.map(
+											(week: TypeWeek, weekIndex: number) => (
+												<ListItem
+													key={weekIndex}
+													identifier={`WEEK_${periodIndex}_${weekIndex}`}
+													type={'WEEK'}
+													data={{ periodIndex, weekIndex, week }}
+												>
+													<TrainingWeek
+														week={week}
+														periodIndex={periodIndex}
+														weekIndex={weekIndex}
+														weekDaySet={weekDaySet}
+														dragData={dragData}
+														setDraggedData={setDraggedData}
+													/>
+												</ListItem>
+											),
+									  )
+									: null}
+							</SortableContainer>
+						)} */}
+				</>
 			</StyledPeriod>
+			{weeks}
+			{/* {identifiers && (
+				<SortableContainer identifiers={identifiers}>
+					{trainingPeriod?.plan
+						? trainingPeriod.plan.map((week: TypeWeek, weekIndex: number) => (
+								<ListItem
+									key={weekIndex}
+									identifier={`WEEK_${periodIndex}_${weekIndex}`}
+									type={'WEEK'}
+									data={{ periodIndex, weekIndex, week }}
+								>
+									<TrainingWeek
+										week={week}
+										periodIndex={periodIndex}
+										weekIndex={weekIndex}
+										weekDaySet={weekDaySet}
+										dragData={dragData}
+										setDraggedData={setDraggedData}
+									/>
+								</ListItem>
+						  ))
+						: null} 
+				</SortableContainer>
+			)}*/}
 			{/* <div>
 				{trainingPeriod?.plan
 					? trainingPeriod.plan.map((week: TypeWeek, weekIndex: number) => (

@@ -16,6 +16,7 @@ export type TypeTrainingPlanContext = {
 	weekStartMonday: boolean;
 	someThingIsDragged: boolean;
 	draggedType: string | null;
+	activeId: number | string | null | undefined;
 	setDraggedType: (type: string | null) => void;
 	addDay: (periodIndex: number, weekIndex: number) => void;
 	addWeek: (periodIndex: number, weekIndex: number) => void;
@@ -95,6 +96,7 @@ export type TypeTrainingPlanContext = {
 	handleWeekStart: (startsMonday: boolean) => void;
 	handleDrop: (type: string, data: any, droppedAtIndex: number) => void;
 	handleSomethingIsDragged: (isDragged: boolean) => void;
+	setActiveId: (id: number | string | null | undefined) => void;
 };
 
 const initialState: TypeTrainingPlanContext = {
@@ -103,6 +105,7 @@ const initialState: TypeTrainingPlanContext = {
 	weekStartMonday: true,
 	someThingIsDragged: false,
 	draggedType: null,
+	activeId: null,
 	addDay: () => {},
 	addWeek: () => {},
 	addSession: () => {},
@@ -121,6 +124,7 @@ const initialState: TypeTrainingPlanContext = {
 	handleSomethingIsDragged: () => {},
 	setDraggedType: () => {},
 	handlePeriodName: () => {},
+	setActiveId: () => {},
 };
 
 export const TrainingplanContext =
@@ -141,7 +145,6 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 	};
 
 	const addDay = (periodIndex: number, weekIndex: number) => {
-		console.log('add day');
 		dispatch({
 			type: 'ADD_DAY',
 			payload: { periodIndex, weekIndex },
@@ -149,10 +152,16 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 	};
 
 	const addWeek = (periodIndex: number, weekIndex: number) => {
-		console.log('add week');
 		dispatch({
 			type: 'ADD_WEEK',
 			payload: { periodIndex, weekIndex },
+		});
+	};
+
+	const setActiveId = (id: number | string | null | undefined) => {
+		dispatch({
+			type: 'SET_ACTIVE_ID',
+			payload: { id },
 		});
 	};
 
@@ -379,6 +388,9 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		if (type === 'WEEK') {
 			dispatch({ type: 'DROP_WEEK', payload: { data, droppedAtIndex } });
 		}
+		if (type === 'PERIOD') {
+			dispatch({ type: 'DROP_PERIOD', payload: { data, droppedAtIndex } });
+		}
 	};
 
 	return (
@@ -389,6 +401,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 				weekStartMonday: state.weekStartMonday,
 				someThingIsDragged: state.someThingIsDragged,
 				draggedType: state.draggedType,
+				activeId: state.activeId,
 				addDay,
 				addWeek,
 				addSession,
@@ -407,6 +420,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 				handleDrop,
 				handleSomethingIsDragged,
 				setDraggedType,
+				setActiveId,
 			}}
 		>
 			{children}

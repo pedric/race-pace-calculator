@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useSortable } from '@dnd-kit/sortable';
-import { rectSortingStrategy } from '@dnd-kit/sortable';
+import { rectSortingStrategy, AnimateLayoutChanges } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 import { useState, useContext } from 'react';
 import { TrainingplanContext } from '../context/traininplan/TrainingPlanContext';
@@ -13,14 +13,40 @@ interface DropZoneProps {
 }
 
 const DropZone = ({ type, index, data, onDropFunction }: DropZoneProps) => {
-	const { isOver, setNodeRef, over, node, transition } = useSortable({
-		id: `${type}`,
+	const {
+		active,
+		attributes,
+		isDragging,
+		listeners,
+		over,
+		setNodeRef,
+		transition,
+		transform,
+	} = useSortable({
+		id: `${type}_${index}`,
 		data: {
+			// type: 'container',
+			// children: items,
 			id: index,
 			type: type,
 			data: data,
 		},
+		// animateLayoutChanges,
 	});
+	// const isOverContainer = over
+	// 	? (id === over.id && active?.data.current?.type !== type) ||
+	// 	  items.includes(over.id)
+	// 	: false;
+
+	// const { isOver, setNodeRef, over, node, transition } = useSortable({
+	// 	id: `${type}`,
+	// 	data: {
+	// 		id: index,
+	// 		type: type,
+	// 		data: data,
+	// 	},
+	// 	animateLayoutChanges,
+	// });
 	const [draggedOver, setIsDraggedOver] = useState<number | undefined>(
 		undefined,
 	);
@@ -29,7 +55,6 @@ const DropZone = ({ type, index, data, onDropFunction }: DropZoneProps) => {
 	console.log('drop zone draggedType', draggedType);
 	console.log('drop zone type', type);
 	console.log('drop zone over', over);
-	console.log('drop zone node', node);
 
 	return (
 		<Zone
@@ -37,29 +62,29 @@ const DropZone = ({ type, index, data, onDropFunction }: DropZoneProps) => {
 		// ref={setNodeRef}
 		>
 			<Inner
-				isOver={isOver}
-				ref={setNodeRef}
-				isActive={isOver && type == draggedType}
-				// onDragOver={(e: any) => {
-				// 	e.preventDefault();
-				// 	setIsDraggedOver(index);
-				// }}
-				// onMouseOver={(e) => {
-				// 	e.preventDefault();
-				// 	setIsDraggedOver(index);
-				// }}
-				// onDrop={(e: any) => {
-				// 	e.preventDefault();
-				// 	setIsDraggedOver(undefined);
-				// 	onDropFunction(data, index);
-				// }}
-				// onMouseUp={(e: any) => {
-				// 	e.preventDefault();
-				// 	setIsDraggedOver(undefined);
-				// 	onDropFunction(data, index);
-				// }}
-				// onDragLeave={() => setIsDraggedOver(undefined)}
-				// onMouseLeave={() => setIsDraggedOver(undefined)}
+			// isOver={isOver}
+			// ref={setNodeRef}
+			// isActive={isOver && type == draggedType}
+			// onDragOver={(e: any) => {
+			// 	e.preventDefault();
+			// 	setIsDraggedOver(index);
+			// }}
+			// onMouseOver={(e) => {
+			// 	e.preventDefault();
+			// 	setIsDraggedOver(index);
+			// }}
+			// onDrop={(e: any) => {
+			// 	e.preventDefault();
+			// 	setIsDraggedOver(undefined);
+			// 	onDropFunction(data, index);
+			// }}
+			// onMouseUp={(e: any) => {
+			// 	e.preventDefault();
+			// 	setIsDraggedOver(undefined);
+			// 	onDropFunction(data, index);
+			// }}
+			// onDragLeave={() => setIsDraggedOver(undefined)}
+			// onMouseLeave={() => setIsDraggedOver(undefined)}
 			></Inner>
 		</Zone>
 	);

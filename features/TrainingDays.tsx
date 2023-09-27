@@ -17,6 +17,7 @@ import {
 import styled from '@emotion/styled';
 import DropZone from '../components/dropZone';
 import DraggableContainer from '../components/DraggableContainer';
+import SortableContainer, { ListItem } from '../components/SortableContainer';
 
 type Props = {
 	days: TypeDay[];
@@ -67,9 +68,13 @@ const TrainingDays = ({ days, periodIndex, weekIndex, weekDaySet }: Props) => {
 	const onDragStartFunction = (data: any) => {
 		setDraggedData(data);
 	};
+	const identifiers = days.map(
+		(session: TypeDay, dayIndex: number) =>
+			`DAY_${periodIndex}_${weekIndex}_${dayIndex}`,
+	);
 
 	return (
-		<>
+		<SortableContainer identifiers={identifiers}>
 			{days.map((day: TypeDay, dayIndex: number) => {
 				const dayName = weekDaySet[dayIndex];
 				let restDay = true;
@@ -81,8 +86,20 @@ const TrainingDays = ({ days, periodIndex, weekIndex, weekDaySet }: Props) => {
 					});
 				});
 				return (
-					<Fragment key={dayIndex}>
-						<DropZone
+					<ListItem
+						key={dayIndex}
+						identifier={`DAY_${periodIndex}_${weekIndex}_${dayIndex}`}
+						type={'DAY'}
+						index={dayIndex}
+						data={{
+							periodIndex,
+							weekIndex,
+							dayIndex,
+							day,
+						}}
+						name={dayName}
+					>
+						{/* <DropZone
 							type={'DAY'}
 							index={dayIndex}
 							data={dragData}
@@ -101,17 +118,17 @@ const TrainingDays = ({ days, periodIndex, weekIndex, weekDaySet }: Props) => {
 							}}
 							buttonText={'Move day'}
 							onDragStartFunction={onDragStartFunction}
-						>
-							<StyledDay restDay={restDay}>
-								{dayName && <div>{dayName}</div>}
-								{/* <div onClick={() => handleOpenDays(dayIndex)}>
+						> */}
+						<StyledDay restDay={restDay}>
+							{dayName && <div>{dayName}</div>}
+							{/* <div onClick={() => handleOpenDays(dayIndex)}>
 									toggle day
 									<Icon
 										icon={isOpen(dayIndex) ? 'chevron-down' : 'chevron-up'}
 									/>
 								</div> */}
-								{restDay && <p>REST DAY</p>}
-								{/* {isOpen(dayIndex) && (
+							{restDay && <p>REST DAY</p>}
+							{/* {isOpen(dayIndex) && (
 									<div>
 										<input
 											type='text'
@@ -135,56 +152,45 @@ const TrainingDays = ({ days, periodIndex, weekIndex, weekDaySet }: Props) => {
 										</div>
 									</div>
 								)} */}
-								<div onClick={() => handleOpenDays(dayIndex)}>
-									toggle day tabindex test
-									<Icon
-										icon={isOpen(dayIndex) ? 'chevron-down' : 'chevron-up'}
-									/>
-								</div>
-							</StyledDay>
-						</DraggableContainer>
-						<div onClick={() => handleOpenDays(dayIndex)}>
+							{/* <div onClick={() => handleOpenDays(dayIndex)}>
+								toggle day tabindex test
+								<Icon icon={isOpen(dayIndex) ? 'chevron-down' : 'chevron-up'} />
+							</div> */}
+						</StyledDay>
+						{/* </DraggableContainer> */}
+						{/* <div onClick={() => handleOpenDays(dayIndex)}>
 							toggle day
 							<Icon icon={isOpen(dayIndex) ? 'chevron-down' : 'chevron-up'} />
-						</div>
-						{isOpen(dayIndex) && (
-							<>
+						</div> */}
+
+						<>
+							<div>
+								<input
+									type='text'
+									value={day.name}
+									onChange={(e) =>
+										handleDayName(
+											e.target.value,
+											periodIndex,
+											weekIndex,
+											dayIndex,
+										)
+									}
+								/>
 								<div>
-									<input
-										type='text'
-										value={day.name}
-										onChange={(e) =>
-											handleDayName(
-												e.target.value,
-												periodIndex,
-												weekIndex,
-												dayIndex,
-											)
-										}
-									/>
-									<div>
-										<Sessions
-											sessions={day.sessions}
-											periodIndex={periodIndex}
-											weekIndex={weekIndex}
-											dayIndex={dayIndex}
-										/>
-									</div>
-								</div>
-								{/* <div>
 									<Sessions
 										sessions={day.sessions}
 										periodIndex={periodIndex}
 										weekIndex={weekIndex}
 										dayIndex={dayIndex}
 									/>
-								</div> */}
-							</>
-						)}
-					</Fragment>
+								</div>
+							</div>
+						</>
+					</ListItem>
 				);
 			})}
-		</>
+		</SortableContainer>
 	);
 };
 

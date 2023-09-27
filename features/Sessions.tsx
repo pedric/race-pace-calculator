@@ -16,6 +16,7 @@ import styled from '@emotion/styled';
 import DropZone from '../components/dropZone';
 import DraggableContainer from '../components/DraggableContainer';
 import Icon from '../components/Icon';
+import SortableContainer, { ListItem } from '../components/SortableContainer';
 
 type Props = {
 	sessions: TypeSession[];
@@ -66,12 +67,29 @@ const Sessions = ({ sessions, periodIndex, weekIndex, dayIndex }: Props) => {
 		setDraggedData(data);
 	};
 
+	const identifiers = sessions.map(
+		(session: TypeSession, sessionIndex: number) =>
+			`SESSION_${periodIndex}_${weekIndex}_${dayIndex}_${sessionIndex}`,
+	);
+
 	return (
-		<>
+		<SortableContainer identifiers={identifiers}>
 			{sessions.map((session: TypeSession, sessionIndex: number) => {
 				return (
-					<Fragment key={sessionIndex}>
-						<DropZone
+					<ListItem
+						identifier={`SESSION_${periodIndex}_${weekIndex}_${dayIndex}_${sessionIndex}`}
+						type={'SESSION'}
+						data={{
+							periodIndex,
+							weekIndex,
+							dayIndex,
+							sessionIndex,
+							session,
+						}}
+						index={sessionIndex}
+						key={sessionIndex}
+					>
+						{/* <DropZone
 							type={'SESSION'}
 							index={sessionIndex}
 							data={dragData}
@@ -91,14 +109,14 @@ const Sessions = ({ sessions, periodIndex, weekIndex, dayIndex }: Props) => {
 							}}
 							buttonText={'Move session'}
 							onDragStartFunction={onDragStartFunction}
-						>
-							{/* <div onClick={() => handleOpenSessions(sessionIndex)}>
+						> */}
+						{/* <div onClick={() => handleOpenSessions(sessionIndex)}>
 								toggle session
 								<Icon
 									icon={isOpen(sessionIndex) ? 'chevron-down' : 'chevron-up'}
 								/>
 							</div> */}
-							{/* {isOpen(sessionIndex) && (
+						{/* {isOpen(sessionIndex) && (
 								<StyledSession>
 									<label>session name</label>
 									<input
@@ -122,59 +140,49 @@ const Sessions = ({ sessions, periodIndex, weekIndex, dayIndex }: Props) => {
 										dayIndex={dayIndex}
 									/>
 								</StyledSession> */}
-							{/* )} */}
-							<p
-								onClick={() =>
-									addSession(periodIndex, weekIndex, dayIndex, sessionIndex)
-								}
-							>
-								En till session
-							</p>
-						</DraggableContainer>
-						<div onClick={() => handleOpenSessions(sessionIndex)}>
+						{/* )} */}
+						<p
+							onClick={() =>
+								addSession(periodIndex, weekIndex, dayIndex, sessionIndex)
+							}
+						>
+							En till session
+						</p>
+
+						{/* <div onClick={() => handleOpenSessions(sessionIndex)}>
 							toggle session
 							<Icon
 								icon={isOpen(sessionIndex) ? 'chevron-down' : 'chevron-up'}
 							/>
-						</div>
-						{isOpen(sessionIndex) && (
-							<>
-								<StyledSession>
-									<label>session name</label>
-									<input
-										type='text'
-										value={session.name}
-										onChange={(e) =>
-											handleSessionName(
-												e.target.value,
-												periodIndex,
-												weekIndex,
-												dayIndex,
-												sessionIndex,
-											)
-										}
-									/>
-									<Splits
-										splits={session.splits}
-										periodIndex={periodIndex}
-										weekIndex={weekIndex}
-										sessionIndex={sessionIndex}
-										dayIndex={dayIndex}
-									/>
-								</StyledSession>
-								{/* <Splits
-									splits={session.splits}
-									periodIndex={periodIndex}
-									weekIndex={weekIndex}
-									sessionIndex={sessionIndex}
-									dayIndex={dayIndex}
-								/> */}
-							</>
-						)}
-					</Fragment>
+						</div> */}
+
+						<StyledSession>
+							<label>session name</label>
+							<input
+								type='text'
+								value={session.name}
+								onChange={(e) =>
+									handleSessionName(
+										e.target.value,
+										periodIndex,
+										weekIndex,
+										dayIndex,
+										sessionIndex,
+									)
+								}
+							/>
+							<Splits
+								splits={session.splits}
+								periodIndex={periodIndex}
+								weekIndex={weekIndex}
+								sessionIndex={sessionIndex}
+								dayIndex={dayIndex}
+							/>
+						</StyledSession>
+					</ListItem>
 				);
 			})}
-		</>
+		</SortableContainer>
 	);
 };
 

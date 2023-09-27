@@ -1,5 +1,6 @@
 import { useEffect, useState, useReducer, useContext } from 'react';
 // import { DndContext, useDndMonitor } from '@dnd-kit/core';
+import DragAndDropcontext from '../../context/traininplan/DragAndDropcontext';
 import {
 	TrainingplanContext,
 	TypeTrainingPlanContext,
@@ -29,6 +30,9 @@ import {
 } from '../../types';
 import { defaultSplit, defaultSession, defaultPeriod } from './defaults';
 import Icon from '../../components/Icon';
+import SortableContainer, {
+	ListItem,
+} from '../../components/SortableContainer';
 
 const daytypes = [
 	SESSION_TYPES.EASY,
@@ -76,6 +80,11 @@ const TrainingPlanner = () => {
 	const weekDaySet = weekStartMonday ? weekDays : weekDaysStartOnsunday;
 
 	console.log('someThingIsDragged', someThingIsDragged);
+	console.log('periods', periods);
+
+	const identifiers = periods.map(
+		(period: TypePeriod, periodIndex: number) => `PERIOD_${periodIndex}`,
+	);
 
 	return (
 		<Wrapper someThingIsDragged={someThingIsDragged}>
@@ -83,15 +92,24 @@ const TrainingPlanner = () => {
 				weekStartMonday={weekStartMonday}
 				handleWeekStart={handleWeekStart}
 			/>
-			{periods &&
-				periods.map((trainingPeriod: TypePeriod, periodIndex: number) => (
-					<TrainingPeriod
-						key={periodIndex}
-						trainingPeriod={trainingPeriod}
-						periodIndex={periodIndex}
-						weekDaySet={weekDaySet}
-					/>
-				))}
+			<SortableContainer identifiers={identifiers}>
+				{periods &&
+					periods.map((trainingPeriod: TypePeriod, periodIndex: number) => (
+						<ListItem
+							identifier={`PERIOD_${periodIndex}`}
+							key={periodIndex}
+							index={periodIndex}
+							type={'PERIOD'}
+							data={{ periodIndex, trainingPeriod }}
+						>
+							<TrainingPeriod
+								trainingPeriod={trainingPeriod}
+								periodIndex={periodIndex}
+								weekDaySet={weekDaySet}
+							/>
+						</ListItem>
+					))}
+			</SortableContainer>
 			<button onClick={() => console.log(periods)}>DEBUG STATE</button>
 		</Wrapper>
 	);

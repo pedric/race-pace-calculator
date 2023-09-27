@@ -18,6 +18,8 @@ import {
 import styled from '@emotion/styled';
 import DropZone from '../components/dropZone';
 import DraggableContainer from '../components/DraggableContainer';
+import SortableContainer, { ListItem } from '../components/SortableContainer';
+import { WeekSummary } from '../components/TrainingPlanSummary';
 
 type Props = {
 	week: TypeWeek;
@@ -65,7 +67,7 @@ const TrainingWeeks = ({
 
 	return (
 		<>
-			<DropZone
+			{/* <DropZone
 				type={'WEEK'}
 				index={weekIndex}
 				data={dragData}
@@ -83,40 +85,34 @@ const TrainingWeeks = ({
 				}}
 				buttonText={'Move week'}
 				onDragStartFunction={onDragStartFunction}
-			>
-				<div onClick={() => setOpen(!open)}>
-					toggle vecka
-					<Icon icon={open ? 'chevron-down' : 'chevron-up'} />
-				</div>
-				{open && (
-					<StyledWeek key={weekIndex}>
-						vecka {weekIndex}
-						<input
-							type='text'
-							value={week.name}
-							onChange={(e) =>
-								handleWeekName(e.target.value, periodIndex, weekIndex)
-							}
-						/>
-						<TrainingDays
-							days={week.days}
-							periodIndex={periodIndex}
-							weekIndex={weekIndex}
-							weekDaySet={weekDaySet}
-						/>
-						{!weekIsFull ? (
-							<div onClick={() => addDay(periodIndex, weekIndex)}>
-								en till dag
-								<Icon icon={'plus'} />
-							</div>
-						) : null}
-					</StyledWeek>
-				)}
-			</DraggableContainer>
-			<div onClick={() => setOpen(!open)}>
+			> */}
+			{/* <div onClick={() => setOpen(!open)}>
 				toggle vecka
 				<Icon icon={open ? 'chevron-down' : 'chevron-up'} />
-			</div>
+			</div> */}
+			{/* {open && ( */}
+			<StyledWeek key={weekIndex}>
+				vecka {weekIndex}
+				<input
+					type='text'
+					value={week.name}
+					onChange={(e) =>
+						handleWeekName(e.target.value, periodIndex, weekIndex)
+					}
+				/>
+				{/* {!weekIsFull ? (
+					<div onClick={() => addDay(periodIndex, weekIndex)}>
+						en till dag
+						<Icon icon={'plus'} />
+					</div>
+				) : null} */}
+			</StyledWeek>
+
+			{/* </DraggableContainer> */}
+			{/* <div onClick={() => setOpen(!open)}>
+				toggle vecka
+				<Icon icon={open ? 'chevron-down' : 'chevron-up'} />
+			</div> */}
 			{!weekIsFull ? (
 				<div onClick={() => addDay(periodIndex, weekIndex)}>
 					en till dag
@@ -129,6 +125,13 @@ const TrainingWeeks = ({
 				weekIndex={weekIndex}
 				weekDaySet={weekDaySet}
 			/> */}
+			<TrainingDays
+				days={week.days}
+				periodIndex={periodIndex}
+				weekIndex={weekIndex}
+				weekDaySet={weekDaySet}
+			/>
+			<WeekSummary periodIndex={periodIndex} weekIndex={weekIndex} />
 			<p onClick={() => addWeek(periodIndex, weekIndex)}>En till vecka</p>
 		</>
 	);

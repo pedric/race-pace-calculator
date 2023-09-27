@@ -69,8 +69,13 @@ const DragAndDropcontext = ({ children }: Props) => {
 	);
 	const [clonedItems, setClonedItems] = useState<any>(null);
 	const [isDragging, setIsDragging] = useState(false);
-	const { handleDrop, handleSomethingIsDragged, setDraggedType } =
-		useContext(TrainingplanContext);
+	const {
+		activeId,
+		handleDrop,
+		handleSomethingIsDragged,
+		setDraggedType,
+		setActiveId,
+	} = useContext(TrainingplanContext);
 
 	const handleDragEnd = (e: any) => {
 		const { active, over, activatorEvent } = e;
@@ -110,13 +115,59 @@ const DragAndDropcontext = ({ children }: Props) => {
 
 	return (
 		<DndContext
-			id={'trainingplandroppable'}
+			sensors={sensors}
+			onDragStart={({ active }) => {
+				setActiveId(active.id);
+			}}
 			// onDragStart={(e) => handleDragStart(e)}
 			// onDragEnd={handleDragEnd}
 			measuring={{
 				droppable: {
 					strategy: MeasuringStrategy.Always,
 				},
+			}}
+			onDragOver={({ active, over }) => {
+				const overId = over?.id;
+				console.log('onDragOver active', active);
+				console.log('onDragOver over', over);
+
+				// const overContainer = findContainer(overId);
+				// const activeContainer = findContainer(active.id);
+			}}
+			onDragEnd={({ active, over }) => {
+				const overId = over?.id;
+				const items = ['hej', 'jan', 'banan'];
+				console.log('active', active);
+				console.log('over', over);
+				// if (active.id in items && over?.id) {
+				// 	console.log(2);
+				// 	setContainers((containers) => {
+				// 		const activeIndex = containers.indexOf(active.id);
+				// 		const overIndex = containers.indexOf(over.id);
+
+				// 		return arrayMove(containers, activeIndex, overIndex);
+				// 	});
+				// }
+
+				// const overContainer = findContainer(overId);
+				// const activeContainer = findContainer(active.id);
+				// if (overContainer) {
+				// 	const activeIndex = items[activeContainer].indexOf(active.id);
+				// 	const overIndex = items[overContainer].indexOf(overId);
+
+				// 	if (activeIndex !== overIndex) {
+				// 		setItems((items) => ({
+				// 			...items,
+				// 			[overContainer]: arrayMove(
+				// 				items[overContainer],
+				// 				activeIndex,
+				// 				overIndex,
+				// 			),
+				// 		}));
+				// 	}
+				// }
+
+				setActiveId(null);
 			}}
 
 			// cancelDrop={cancelDrop}

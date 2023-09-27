@@ -136,6 +136,12 @@ const reducer = (state: any, action: any) => {
 		return { ...newState, draggedType: type };
 	}
 
+	if (action.type === 'SET_ACTIVE_ID') {
+		const newState = { ...state };
+		const { id } = action.payload;
+		return { ...newState, activeId: id };
+	}
+
 	if (action.type === 'EDIT_PERIOD_NAME') {
 		const newState = { ...state };
 		const { value, periodIndex } = action.payload;
@@ -249,6 +255,18 @@ const reducer = (state: any, action: any) => {
 		return { ...newState };
 	}
 
-	console.log('Unknown action.');
+	if (action.type === 'DROP_PERIOD') {
+		const newState = { ...state };
+
+		const { periodIndex, trainingPeriod } = action.payload.data;
+
+		newState.periods.splice(periodIndex, 1);
+
+		newState.periods.splice(action.payload.droppedAtIndex, 0, trainingPeriod);
+
+		return { ...newState };
+	}
+
+	console.warn('Unknown action.');
 };
 export default reducer;
