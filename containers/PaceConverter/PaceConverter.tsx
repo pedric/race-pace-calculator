@@ -8,12 +8,7 @@ import {
 	paceFromKmh,
 	paceInmilesFromStateData,
 } from '../../util/maths';
-import {
-	CONVERTION,
-	CHANGE_TYPE,
-	TIME_UNIT,
-	UNITS,
-} from '../../util/constants';
+import { CONVERTION, CHANGE_TYPE, TIME_UNIT, UNITS } from '../../util/constants';
 import reducer from './reducer';
 import styled from '@emotion/styled';
 import { Wrapper } from '../../styles/layout';
@@ -42,9 +37,7 @@ const PaceConverter = () => {
 
 	const [shadowState, setShadowState] = useState<State>(initialState);
 	const [units, setUnits] = useState<string>(UNITS.METRIC);
-	const [convertionType, setConvertionType] = useState<string>(
-		CONVERTION.PACE_TO_SPEED_METRIC,
-	);
+	const [convertionType, setConvertionType] = useState<string>(CONVERTION.PACE_TO_SPEED_METRIC);
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const [state, dispatch] = useReducer(reducer, initialState);
@@ -63,7 +56,7 @@ const PaceConverter = () => {
 		}, 150);
 	}, [convertionType, units]);
 
-	const handleChange = (val: number | string, type: number, unit: string) => {
+	const handleChange = (val: number | string, type: number) => {
 		const value = typeof val == 'string' ? Number(val) : val;
 
 		switch (type) {
@@ -132,38 +125,16 @@ const PaceConverter = () => {
 		<Outer>
 			<Wrapper>
 				<ConverterMenu>
-					<MenuButton
-						active={units === UNITS.METRIC}
-						role='button'
-						onClick={() => handleUnitChange()}
-					>
+					<MenuButton active={units === UNITS.METRIC} role='button' onClick={() => handleUnitChange()}>
 						Metric
 					</MenuButton>
-					<MenuButton
-						active={units === UNITS.IMPERIAL}
-						role='button'
-						onClick={() => handleUnitChange()}
-					>
+					<MenuButton active={units === UNITS.IMPERIAL} role='button' onClick={() => handleUnitChange()}>
 						Imperial
 					</MenuButton>
-					<MenuButton
-						active={
-							convertionType === CONVERTION.SPEED_TO_PACE_IMPERIAL ||
-							convertionType === CONVERTION.SPEED_TO_PACE_METRIC
-						}
-						role='button'
-						onClick={() => handleConvertionType()}
-					>
+					<MenuButton active={convertionType === CONVERTION.SPEED_TO_PACE_IMPERIAL || convertionType === CONVERTION.SPEED_TO_PACE_METRIC} role='button' onClick={() => handleConvertionType()}>
 						Speed
 					</MenuButton>
-					<MenuButton
-						active={
-							convertionType === CONVERTION.PACE_TO_SPEED_IMPERIAL ||
-							convertionType === CONVERTION.PACE_TO_SPEED_METRIC
-						}
-						role='button'
-						onClick={() => handleConvertionType()}
-					>
+					<MenuButton active={convertionType === CONVERTION.PACE_TO_SPEED_IMPERIAL || convertionType === CONVERTION.PACE_TO_SPEED_METRIC} role='button' onClick={() => handleConvertionType()}>
 						Pace
 					</MenuButton>
 				</ConverterMenu>
@@ -173,64 +144,27 @@ const PaceConverter = () => {
 					<>
 						{convertionType == CONVERTION.SPEED_TO_PACE_METRIC && (
 							<>
-								<Converter
-									convertionType={CONVERTION.SPEED_TO_PACE_METRIC}
-									state={shadowState}
-									onChangeFunction={handleChange}
-									data={state}
-								/>
+								<Converter convertionType={CONVERTION.SPEED_TO_PACE_METRIC} state={shadowState} onChangeFunction={handleChange} data={state} />
 							</>
 						)}
 						{convertionType == CONVERTION.SPEED_TO_PACE_IMPERIAL && (
 							<>
-								<Converter
-									convertionType={CONVERTION.SPEED_TO_PACE_IMPERIAL}
-									state={shadowState}
-									onChangeFunction={handleChange}
-									data={state}
-								/>
+								<Converter convertionType={CONVERTION.SPEED_TO_PACE_IMPERIAL} state={shadowState} onChangeFunction={handleChange} data={state} />
 							</>
 						)}
 
 						{convertionType == CONVERTION.PACE_TO_SPEED_METRIC && (
 							<>
-								<Converter
-									convertionType={CONVERTION.PACE_TO_SPEED_METRIC}
-									state={shadowState}
-									onChangeFunction={handleChange}
-									data={state}
-								/>
+								<Converter convertionType={CONVERTION.PACE_TO_SPEED_METRIC} state={shadowState} onChangeFunction={handleChange} data={state} />
 							</>
 						)}
 						{convertionType == CONVERTION.PACE_TO_SPEED_IMPERIAL && (
 							<>
-								<Converter
-									convertionType={CONVERTION.PACE_TO_SPEED_IMPERIAL}
-									state={shadowState}
-									onChangeFunction={handleChange}
-									data={state}
-								/>
+								<Converter convertionType={CONVERTION.PACE_TO_SPEED_IMPERIAL} state={shadowState} onChangeFunction={handleChange} data={state} />
 							</>
 						)}
 					</>
 				)}
-				{/* <div>DEBUG 👇</div>
-				<p>state</p>
-				<div>
-					<pre>{JSON.stringify(state, null, 2)}</pre>
-				</div>
-				<p>shadowState</p>
-				<div>
-					<pre>{JSON.stringify(shadowState, null, 2)}</pre>
-				</div>
-				<p>convertionType</p>
-				<div>
-					<pre>{convertionType}</pre>
-				</div>
-				<p>units</p>
-				<div>
-					<pre>{units}</pre>
-				</div> */}
 			</Wrapper>
 		</Outer>
 	);

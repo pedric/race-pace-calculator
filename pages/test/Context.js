@@ -34,11 +34,7 @@ import {
 } from '@dnd-kit/sortable';
 
 const Context = ({ children }) => {
-	const sensors = useSensors(
-		useSensor(MouseSensor),
-		useSensor(TouchSensor),
-		useSensor(KeyboardSensor),
-	);
+	const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
 
 	const [activeId, setActiveId] = useState(null);
 
@@ -69,10 +65,10 @@ const Context = ({ children }) => {
 				const activeContainer = findContainer(active.id);
 			}}
 			onDragEnd={({ active, over }) => {
-				const overId = over?.id;
-				const items = ['hej', 'jan', 'banan'];
-				console.log('active', active);
-				console.log('over', over);
+				// const overId = over?.id;
+				// const items = ['hej', 'jan', 'banan'];
+				// console.log('active', active);
+				// console.log('over', over);
 				// if (active.id in items && over?.id) {
 				// 	console.log(2);
 				// 	setContainers((containers) => {
@@ -92,11 +88,7 @@ const Context = ({ children }) => {
 					if (activeIndex !== overIndex) {
 						setItems((items) => ({
 							...items,
-							[overContainer]: arrayMove(
-								items[overContainer],
-								activeIndex,
-								overIndex,
-							),
+							[overContainer]: arrayMove(items[overContainer], activeIndex, overIndex),
 						}));
 					}
 				}

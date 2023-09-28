@@ -1,21 +1,14 @@
 import { useState, useEffect, useContext, Fragment } from 'react';
 import { TypeSessionSplit } from '../types';
-import {
-	SESSION_TYPES,
-	MEASUREMENT_TYPES,
-	TRAINING_PLAN_MEASUREMENT_UNITS,
-	weekDays,
-	weekDaysStartOnsunday,
-} from '../util/constants';
-import {
-	TypeTrainingPlanContext,
-	TrainingplanContext,
-} from '../context/traininplan/TrainingPlanContext';
+import { SESSION_TYPES, MEASUREMENT_TYPES, TRAINING_PLAN_MEASUREMENT_UNITS, weekDays, weekDaysStartOnsunday } from '../util/constants';
+import { TypeTrainingPlanContext, TrainingplanContext } from '../context/traininplan/TrainingPlanContext';
 import styled from '@emotion/styled';
 import DropZone from '../components/dropZone';
 import DraggableContainer from '../components/DraggableContainer';
 import Icon from '../components/Icon';
 import SortableContainer, { ListItem } from '../components/SortableContainer';
+import { AddButton, InputWrapper } from '../styles/components';
+import { theme } from '../styles/theme';
 
 type Props = {
 	splits: TypeSessionSplit[];
@@ -26,33 +19,10 @@ type Props = {
 };
 
 const StyledSplit = styled.div`
-	border: 1px solid purple;
+	margin-bottom: 1em;
 `;
 
-const DropZones = styled.div<any>`
-	position: relative;
-	height: 20px;
-
-	div {
-		position: absolute;
-		border: 1px solid purple;
-		background: blue;
-		height: ${({ active }) => (active ? '100px' : '10px')};
-		left: 0;
-		right: 0;
-		top: ${({ active }) => (active ? '-50px' : '0')};
-		bottom: ${({ active }) => (active ? '-50px' : '0')};
-		transition: all 250ms linear;
-	}
-`;
-
-const Splits = ({
-	splits,
-	periodIndex,
-	weekIndex,
-	sessionIndex,
-	dayIndex,
-}: Props) => {
+const Splits = ({ splits, periodIndex, weekIndex, sessionIndex, dayIndex }: Props) => {
 	const {
 		name,
 		periods,
@@ -75,13 +45,7 @@ const Splits = ({
 	const [dragData, setDraggedData] = useState<any>(null);
 	const [open, setOpen] = useState<number[]>([]);
 
-	const daytypes = [
-		SESSION_TYPES.EASY,
-		SESSION_TYPES.MARATHON_PACE,
-		SESSION_TYPES.THRESHOLD,
-		SESSION_TYPES.INTERVAL,
-		SESSION_TYPES.REPETITIONS,
-	];
+	const daytypes = [SESSION_TYPES.EASY, SESSION_TYPES.MARATHON_PACE, SESSION_TYPES.THRESHOLD, SESSION_TYPES.INTERVAL, SESSION_TYPES.REPETITIONS];
 
 	const units = ['Km', 'Miles', 'Minutes'];
 
@@ -108,169 +72,99 @@ const Splits = ({
 		setDraggedData(data);
 	};
 
-	const identifiers = splits.map(
-		(split: TypeSessionSplit, splitIndex: number) =>
-			`SPLIT_${periodIndex}_${weekIndex}_${dayIndex}_${sessionIndex}_${splitIndex}`,
-	);
+	const identifiers = splits.map((split: TypeSessionSplit, splitIndex: number) => `SPLIT_${periodIndex}_${weekIndex}_${dayIndex}_${sessionIndex}_${splitIndex}`);
 
 	return (
-		<SortableContainer identifiers={identifiers}>
-			{splits.map((split: TypeSessionSplit, splitIndex: number) => {
-				const isMeasuerdByTime = split.unit == 'Minutes';
-				return (
-					<ListItem
-						identifier={`SPLIT_${periodIndex}_${weekIndex}_${dayIndex}_${sessionIndex}_${splitIndex}`}
-						key={splitIndex}
-						type={'SPLIT'}
-						index={splitIndex}
-						data={{
-							periodIndex,
-							weekIndex,
-							dayIndex,
-							sessionIndex,
-							splitIndex,
-							split,
-						}}
-					>
-						<div>
-							{/* <div onClick={() => handleOpenSplits(splitIndex)}>
-								toggle split
-								<Icon
-									icon={isOpen(splitIndex) ? 'chevron-down' : 'chevron-up'}
-								/>
-							</div> */}
-
+		<>
+			<SortableContainer identifiers={identifiers}>
+				{splits.map((split: TypeSessionSplit, splitIndex: number) => {
+					const isMeasuerdByTime = split.unit == 'Minutes';
+					return (
+						<ListItem
+							data-type={'SPLIT'}
+							identifier={`SPLIT_${periodIndex}_${weekIndex}_${dayIndex}_${sessionIndex}_${splitIndex}`}
+							key={splitIndex}
+							type={'SPLIT'}
+							index={splitIndex}
+							data={{
+								periodIndex,
+								weekIndex,
+								dayIndex,
+								sessionIndex,
+								splitIndex,
+								split,
+							}}
+							name={split.name}
+						>
 							<StyledSplit>
-								<small>Name</small>
-								<input
-									type='text'
-									value={split.name}
-									onChange={(e) =>
-										handleSplitName(
-											e.target.value,
-											periodIndex,
-											weekIndex,
-											dayIndex,
-											sessionIndex,
-											splitIndex,
-										)
-									}
-								/>
-								<small>intensity</small>
-								<p>I am {split.intensity}</p>
-								<select
-									defaultValue={split.intensity}
-									onChange={(e) => {
-										handleSplitType(
-											daytypes[e.target.selectedIndex],
-											periodIndex,
-											weekIndex,
-											dayIndex,
-											sessionIndex,
-											splitIndex,
-										);
-									}}
-								>
-									{daytypes.map((splitType: string, idx) => (
-										<option key={idx} value={splitType}>
-											{splitType}
-										</option>
-									))}
-								</select>
+								<InputWrapper>
+									<label>split name</label>
+									<input type='text' value={split.name} onChange={(e) => handleSplitName(e.target.value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex)} />
+								</InputWrapper>
+								<InputWrapper>
+									<label>Split Intensity</label>
+									<select
+										defaultValue={split.intensity}
+										onChange={(e) => {
+											handleSplitType(daytypes[e.target.selectedIndex], periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex);
+										}}
+									>
+										{daytypes.map((splitType: string, idx) => (
+											<option key={idx} value={splitType}>
+												{splitType}
+											</option>
+										))}
+									</select>
+								</InputWrapper>
 								<div>
-									<small>Set units</small>
+									{isMeasuerdByTime && (
+										<InputWrapper>
+											<label>Minutes</label>
+											<input type='number' value={split.minutes} onChange={(e) => handleSplitTime(e.target.value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex)} />
+										</InputWrapper>
+									)}
+									{!isMeasuerdByTime && (
+										<InputWrapper>
+											<label>Distance {split.unit}</label>
+											<input type='number' value={split.distance} onChange={(e) => handleSplitDistance(e.target.value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex)} />
+										</InputWrapper>
+									)}
 									{units.map((_: string, idx: number) => (
-										<UnitButton
-											key={idx}
-											role='button'
-											active={_ == split.unit}
-											onClick={() =>
-												handleSplitUnit(
-													_,
-													periodIndex,
-													weekIndex,
-													dayIndex,
-													sessionIndex,
-													splitIndex,
-												)
-											}
-										>
+										<UnitButton key={idx} role='button' active={_ == split.unit} onClick={() => handleSplitUnit(_, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex)}>
 											{_}
 										</UnitButton>
 									))}
-									{isMeasuerdByTime && (
-										<>
-											<small>Minutes</small>
-											<input
-												type='number'
-												value={split.minutes}
-												onChange={(e) =>
-													handleSplitTime(
-														e.target.value,
-														periodIndex,
-														weekIndex,
-														dayIndex,
-														sessionIndex,
-														splitIndex,
-													)
-												}
-											/>
-										</>
-									)}
-									{!isMeasuerdByTime && (
-										<>
-											<small>Distance</small>
-											<input
-												type='number'
-												value={split.distance}
-												onChange={(e) =>
-													handleSplitDistance(
-														e.target.value,
-														periodIndex,
-														weekIndex,
-														dayIndex,
-														sessionIndex,
-														splitIndex,
-													)
-												}
-											/>
-										</>
-									)}
 								</div>
 							</StyledSplit>
-
-							{/* <div onClick={() => handleOpenSplits(splitIndex)}>
-								toggle split
-								<Icon
-									icon={isOpen(splitIndex) ? 'chevron-down' : 'chevron-up'}
-								/>
-							</div> */}
-							<p
-								onClick={() =>
-									addSplit(
-										periodIndex,
-										weekIndex,
-										dayIndex,
-										sessionIndex,
-										splitIndex,
-									)
-								}
-							>
-								En till split
-							</p>
-						</div>
-					</ListItem>
-				);
-			})}
-		</SortableContainer>
+						</ListItem>
+					);
+				})}
+			</SortableContainer>
+			<AddButton role='button' onClick={() => addSplit(periodIndex, weekIndex, dayIndex, sessionIndex)}>
+				Add split
+			</AddButton>
+		</>
 	);
 };
 
 const UnitButton = styled.span<any>`
 	display: inline-block;
 	padding: 4px;
-	border: 1px dashed green;
-	background: ${({ active }) => (active ? 'yellow' : '')};
+	border: 1px solid ${({ active }) => (active ? theme.white : theme.cta)};
+	background: ${({ active }) => (active ? theme.cta : theme.white)};
+	color: ${({ active }) => (active ? theme.white : theme.cta)};
+	text-align: center;
+	padding: 0.25em 0.5em;
+	border-radius: 9999px;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: 300;
+	line-height: 1.7;
+	margin: 0 0.25em;
+
+	&:hover {
+		cursor: pointer;
+	}
 `;
 
 export default Splits;

@@ -32,17 +32,10 @@ import {
 	SortingStrategy,
 	horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import {
-	TrainingplanContext,
-	TypeTrainingPlanContext,
-} from './TrainingPlanContext';
+import { TrainingplanContext, TypeTrainingPlanContext } from './TrainingPlanContext';
 
 const DragContext = ({ children }) => {
-	const sensors = useSensors(
-		useSensor(MouseSensor),
-		useSensor(TouchSensor),
-		useSensor(KeyboardSensor),
-	);
+	const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
 
 	const [activeId, setActiveId] = useState(null);
 
@@ -59,6 +52,7 @@ const DragContext = ({ children }) => {
 
 	return (
 		<DndContext
+			id={'training_planner'}
 			sensors={sensors}
 			measuring={{
 				droppable: {
@@ -75,8 +69,6 @@ const DragContext = ({ children }) => {
 				// const activeContainer = findContainer(active.id);
 			}}
 			onDragEnd={({ active, over }) => {
-				console.log('active', active);
-				console.log('over', over);
 				const defined = over && active && over.data && active.data;
 				if (!defined) {
 					return;

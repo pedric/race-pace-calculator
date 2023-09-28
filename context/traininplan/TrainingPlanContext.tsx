@@ -17,6 +17,7 @@ export type TypeTrainingPlanContext = {
 	someThingIsDragged: boolean;
 	draggedType: string | null;
 	activeId: number | string | null | undefined;
+	store: string;
 	setDraggedType: (type: string | null) => void;
 	addDay: (periodIndex: number, weekIndex: number) => void;
 	addWeek: (periodIndex: number, weekIndex: number) => void;
@@ -24,14 +25,12 @@ export type TypeTrainingPlanContext = {
 		periodIndex: number,
 		weekIndex: number,
 		dayIndex: number,
-		sessionIndex: number,
 	) => void;
 	addSplit: (
 		periodIndex: number,
 		weekIndex: number,
 		dayIndex: number,
 		sessionIndex: number,
-		splitIndex: number,
 	) => void;
 	addPeriod: () => void;
 	handlePeriodName: (value: string, periodIndex: number) => void;
@@ -97,6 +96,8 @@ export type TypeTrainingPlanContext = {
 	handleDrop: (type: string, data: any, droppedAtIndex: number) => void;
 	handleSomethingIsDragged: (isDragged: boolean) => void;
 	setActiveId: (id: number | string | null | undefined) => void;
+	resetFromStore: (store: TypeTrainingPlanState) => void;
+	setStore: (store: string) => void;
 };
 
 const initialState: TypeTrainingPlanContext = {
@@ -106,6 +107,7 @@ const initialState: TypeTrainingPlanContext = {
 	someThingIsDragged: false,
 	draggedType: null,
 	activeId: null,
+	store: '',
 	addDay: () => {},
 	addWeek: () => {},
 	addSession: () => {},
@@ -125,6 +127,8 @@ const initialState: TypeTrainingPlanContext = {
 	setDraggedType: () => {},
 	handlePeriodName: () => {},
 	setActiveId: () => {},
+	resetFromStore: () => {},
+	setStore: () => {},
 };
 
 export const TrainingplanContext =
@@ -136,6 +140,13 @@ interface Props {
 
 export const TrainingPlanProvider = ({ children }: Props) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
+
+	const setStore = (store: string) => {
+		dispatch({
+			type: 'SET_STORE',
+			payload: { store },
+		});
+	};
 
 	const setDraggedType = (type: string | null) => {
 		dispatch({
@@ -169,11 +180,10 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		periodIndex: number,
 		weekIndex: number,
 		dayIndex: number,
-		sessionIndex: number,
 	) => {
 		dispatch({
 			type: 'ADD_SESSION',
-			payload: { periodIndex, weekIndex, dayIndex, sessionIndex },
+			payload: { periodIndex, weekIndex, dayIndex },
 		});
 	};
 
@@ -182,11 +192,10 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		weekIndex: number,
 		dayIndex: number,
 		sessionIndex: number,
-		splitIndex: number,
 	) => {
 		dispatch({
 			type: 'ADD_SPLIT',
-			payload: { periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex },
+			payload: { periodIndex, weekIndex, dayIndex, sessionIndex },
 		});
 	};
 
@@ -372,9 +381,6 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 	};
 
 	const handleDrop = (type: string, data: any, droppedAtIndex: number) => {
-		console.log('drop type', type);
-		console.log('drop data', data);
-		console.log('drop droppedAtIndex', droppedAtIndex);
 		if (!data) return;
 		if (type === 'SPLIT') {
 			dispatch({ type: 'DROP_SPLIT', payload: { data, droppedAtIndex } });
@@ -393,6 +399,10 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		}
 	};
 
+	const resetFromStore = (store: TypeTrainingPlanState) => {
+		dispatch({ type: 'RESET_FROM_STORE', payload: { store } });
+	};
+
 	return (
 		<TrainingplanContext.Provider
 			value={{
@@ -402,6 +412,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 				someThingIsDragged: state.someThingIsDragged,
 				draggedType: state.draggedType,
 				activeId: state.activeId,
+				store: state.store,
 				addDay,
 				addWeek,
 				addSession,
@@ -421,6 +432,8 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 				handleSomethingIsDragged,
 				setDraggedType,
 				setActiveId,
+				resetFromStore,
+				setStore,
 			}}
 		>
 			{children}

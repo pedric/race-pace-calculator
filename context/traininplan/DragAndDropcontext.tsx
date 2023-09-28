@@ -41,12 +41,6 @@ interface Props {
 function Monitor() {
 	// Monitor drag and drop events that happen on the parent `DndContext` provider
 	useDndMonitor({
-		// onDragStart(e) {
-		// 	console.log('onDragStart', e);
-		// },
-		// onDragMove(e) {
-		// 	console.log('onDragMove', e);
-		// },
 		onDragOver(e) {
 			console.log('onDragOver', e);
 		},
@@ -62,20 +56,10 @@ function Monitor() {
 }
 
 const DragAndDropcontext = ({ children }: Props) => {
-	const sensors = useSensors(
-		useSensor(MouseSensor),
-		useSensor(TouchSensor),
-		useSensor(KeyboardSensor),
-	);
+	const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
 	const [clonedItems, setClonedItems] = useState<any>(null);
 	const [isDragging, setIsDragging] = useState(false);
-	const {
-		activeId,
-		handleDrop,
-		handleSomethingIsDragged,
-		setDraggedType,
-		setActiveId,
-	} = useContext(TrainingplanContext);
+	const { activeId, handleDrop, handleSomethingIsDragged, setDraggedType, setActiveId } = useContext(TrainingplanContext);
 
 	const handleDragEnd = (e: any) => {
 		const { active, over, activatorEvent } = e;
@@ -88,15 +72,9 @@ const DragAndDropcontext = ({ children }: Props) => {
 
 		console.log('dropped!', e);
 		if (over && active) {
-			const data = active.data?.current?.dragData
-				? active.data.current.dragData
-				: null;
-			const draggedIndex = active.data?.current?.index
-				? active.data.current.index
-				: null;
-			const draggedType = active.data?.current?.type
-				? active.data.current.type
-				: null;
+			const data = active.data?.current?.dragData ? active.data.current.dragData : null;
+			const draggedIndex = active.data?.current?.index ? active.data.current.index : null;
+			const draggedType = active.data?.current?.type ? active.data.current.type : null;
 			if (data && draggedIndex && draggedType) {
 				handleDrop(draggedType, data, draggedIndex);
 			}
@@ -106,9 +84,7 @@ const DragAndDropcontext = ({ children }: Props) => {
 	const handleDragStart = (e: any) => {
 		// console.log('handleDragStart', e);
 		const { active, over, activatorEvent } = e;
-		setDraggedType(
-			active?.data?.current?.type ? active.data.current.type : null,
-		);
+		setDraggedType(active?.data?.current?.type ? active.data.current.type : null);
 		// handleSomethingIsDragged(true);
 		// setIsDragging(true);
 	};

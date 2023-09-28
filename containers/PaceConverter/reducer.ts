@@ -1,14 +1,7 @@
 import { CONVERTION, CHANGE_TYPE, TIME_UNIT } from '../../util/constants';
-import {
-	kilometerPerHourPaceBasedOnSecondsOnly,
-	minutesToSeconds,
-	paceFromKmh,
-	paceFromMph,
-	paceInmilesFromStateData,
-	milesPerHourPaceBasedOnSecondsOnly,
-} from '../../util/maths';
+import { kilometerPerHourPaceBasedOnSecondsOnly, minutesToSeconds, paceFromKmh, paceFromMph, paceInmilesFromStateData, milesPerHourPaceBasedOnSecondsOnly } from '../../util/maths';
 
-const reducer = (state, action) => {
+const reducer = (state: any, action: any) => {
 	if (action.type === 'incremented_age') {
 		return {
 			...state,
@@ -50,8 +43,7 @@ const reducer = (state, action) => {
 		const imperialPace = paceInmilesFromStateData(data);
 		const milesPerHour = Number(action.payload.kmh) / 1.609344;
 
-		const sec =
-			minutesToSeconds(action.payload.minPerKm) + action.payload.secPerKm;
+		const sec = minutesToSeconds(action.payload.minPerKm) + action.payload.secPerKm;
 		// const num = Number(
 		// 	kilometerPerHourPaceBasedOnSecondsOnly(action.payload.distance, sec),
 		// );
@@ -70,11 +62,8 @@ const reducer = (state, action) => {
 	if (action.type === CONVERTION.PACE_TO_SPEED_METRIC) {
 		const { minPerKm, secPerKm } = action.payload;
 
-		const sec =
-			minutesToSeconds(action.payload.minPerKm) + action.payload.secPerKm;
-		const num = Number(
-			kilometerPerHourPaceBasedOnSecondsOnly(action.payload.distance, sec),
-		);
+		const sec = minutesToSeconds(action.payload.minPerKm) + action.payload.secPerKm;
+		const num = Number(kilometerPerHourPaceBasedOnSecondsOnly(action.payload.distance, sec));
 
 		const newKmhPace = Math.round(num).toFixed(2);
 
@@ -103,9 +92,7 @@ const reducer = (state, action) => {
 		const { minPerMile, secPerMile, distance } = action.payload;
 
 		const sec = minutesToSeconds(minPerMile) + secPerMile;
-		const milesPerHour = Number(
-			milesPerHourPaceBasedOnSecondsOnly(distance, sec),
-		);
+		const milesPerHour = Number(milesPerHourPaceBasedOnSecondsOnly(distance, sec));
 		const newKmhPace = Number(milesPerHour) * 1.609344;
 
 		return {
@@ -130,8 +117,7 @@ const reducer = (state, action) => {
 		const imperialPace = paceInmilesFromStateData(data);
 		// const milesPerHour = Number(action.payload.kmh) / 1.609344;
 
-		const sec =
-			minutesToSeconds(action.payload.minPerKm) + action.payload.secPerKm;
+		const sec = minutesToSeconds(action.payload.minPerKm) + action.payload.secPerKm;
 		// const num = Number(
 		// 	kilometerPerHourPaceBasedOnSecondsOnly(action.payload.distance, sec),
 		// );

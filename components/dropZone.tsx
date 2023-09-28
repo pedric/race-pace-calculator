@@ -13,16 +13,7 @@ interface DropZoneProps {
 }
 
 const DropZone = ({ type, index, data, onDropFunction }: DropZoneProps) => {
-	const {
-		active,
-		attributes,
-		isDragging,
-		listeners,
-		over,
-		setNodeRef,
-		transition,
-		transform,
-	} = useSortable({
+	const { active, attributes, isDragging, listeners, over, setNodeRef, transition, transform } = useSortable({
 		id: `${type}_${index}`,
 		data: {
 			// type: 'container',
@@ -47,14 +38,8 @@ const DropZone = ({ type, index, data, onDropFunction }: DropZoneProps) => {
 	// 	},
 	// 	animateLayoutChanges,
 	// });
-	const [draggedOver, setIsDraggedOver] = useState<number | undefined>(
-		undefined,
-	);
+	const [draggedOver, setIsDraggedOver] = useState<number | undefined>(undefined);
 	const { someThingIsDragged, draggedType } = useContext(TrainingplanContext);
-
-	console.log('drop zone draggedType', draggedType);
-	console.log('drop zone type', type);
-	console.log('drop zone over', over);
 
 	return (
 		<Zone

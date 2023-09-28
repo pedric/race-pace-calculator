@@ -1,14 +1,8 @@
-import {
-	defaultDay,
-	defaultPeriod,
-	defaultPlan,
-	defaultSplit,
-	defaultSession,
-} from './defaults';
+import { defaultDay, defaultPeriod, defaultPlan, defaultSplit, defaultSession } from './defaults';
 
 const reducer = (state: any, action: any) => {
-	console.log('[state]', state);
-	console.log('[PAYLOAD]', action.payload);
+	// console.log('[state]', state);
+	// console.log('[PAYLOAD]', action.payload);
 
 	if (action.type === 'ADD_DAY') {
 		const newState = { ...state };
@@ -33,99 +27,49 @@ const reducer = (state: any, action: any) => {
 	if (action.type === 'ADD_SESSION') {
 		const newState = { ...state };
 		const { periodIndex, weekIndex, dayIndex } = action.payload;
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions.push(
-			defaultSession(),
-		);
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions.push(defaultSession());
 		return { ...newState };
 	}
 
 	if (action.type === 'ADD_SPLIT') {
 		const newState = { ...state };
-		const { periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex } =
-			action.payload;
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
-			sessionIndex
-		].splits.push(defaultSplit());
+		const { periodIndex, weekIndex, dayIndex, sessionIndex } = action.payload;
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[sessionIndex].splits.push(defaultSplit());
 		return { ...newState };
 	}
 
 	if (action.type === 'EDIT_SPLIT_TYPE') {
 		const newState = { ...state };
-		const {
-			value,
-			periodIndex,
-			weekIndex,
-			dayIndex,
-			sessionIndex,
-			splitIndex,
-		} = action.payload;
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
-			sessionIndex
-		].splits[splitIndex].intensity = value;
+		const { value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex } = action.payload;
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[sessionIndex].splits[splitIndex].intensity = value;
 		return { ...newState };
 	}
 
 	if (action.type === 'EDIT_SPLIT_NAME') {
 		const newState = { ...state };
-		const {
-			value,
-			periodIndex,
-			weekIndex,
-			dayIndex,
-			sessionIndex,
-			splitIndex,
-		} = action.payload;
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
-			sessionIndex
-		].splits[splitIndex].name = value;
+		const { value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex } = action.payload;
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[sessionIndex].splits[splitIndex].name = value;
 		return { ...newState };
 	}
 
 	if (action.type === 'EDIT_SPLIT_UNIT') {
 		const newState = { ...state };
-		const {
-			value,
-			periodIndex,
-			weekIndex,
-			dayIndex,
-			sessionIndex,
-			splitIndex,
-		} = action.payload;
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
-			sessionIndex
-		].splits[splitIndex].unit = value;
+		const { value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex } = action.payload;
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[sessionIndex].splits[splitIndex].unit = value;
 		return { ...newState };
 	}
 
 	if (action.type === 'EDIT_SPLIT_TIME') {
 		const newState = { ...state };
-		const {
-			value,
-			periodIndex,
-			weekIndex,
-			dayIndex,
-			sessionIndex,
-			splitIndex,
-		} = action.payload;
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
-			sessionIndex
-		].splits[splitIndex].minutes = parseInt(value);
+		const { value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex } = action.payload;
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[sessionIndex].splits[splitIndex].minutes = parseInt(value);
 		return { ...newState };
 	}
 
 	if (action.type === 'EDIT_SPLIT_DISTANCE') {
 		const newState = { ...state };
-		const {
-			value,
-			periodIndex,
-			weekIndex,
-			dayIndex,
-			sessionIndex,
-			splitIndex,
-		} = action.payload;
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
-			sessionIndex
-		].splits[splitIndex].distance = parseInt(value);
+		const { value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex } = action.payload;
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[sessionIndex].splits[splitIndex].distance = parseInt(value);
 		return { ...newState };
 	}
 
@@ -151,11 +95,8 @@ const reducer = (state: any, action: any) => {
 
 	if (action.type === 'EDIT_SESSION_NAME') {
 		const newState = { ...state };
-		const { value, periodIndex, weekIndex, dayIndex, sessionIndex } =
-			action.payload;
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
-			sessionIndex
-		].name = value;
+		const { value, periodIndex, weekIndex, dayIndex, sessionIndex } = action.payload;
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[sessionIndex].name = value;
 		return { ...newState };
 	}
 
@@ -186,22 +127,11 @@ const reducer = (state: any, action: any) => {
 	if (action.type === 'DROP_SPLIT') {
 		const newState = { ...state };
 
-		const {
-			dayIndex,
-			periodIndex,
-			sessionIndex,
-			split,
-			splitIndex,
-			weekIndex,
-		} = action.payload.data;
+		const { dayIndex, periodIndex, sessionIndex, split, splitIndex, weekIndex } = action.payload.data;
 
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
-			sessionIndex
-		].splits.splice(splitIndex, 1);
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[sessionIndex].splits.splice(splitIndex, 1);
 
-		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[
-			sessionIndex
-		].splits.splice(action.payload.droppedAtIndex, 0, split);
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions[sessionIndex].splits.splice(action.payload.droppedAtIndex, 0, split);
 
 		return { ...newState };
 	}
@@ -209,16 +139,11 @@ const reducer = (state: any, action: any) => {
 	if (action.type === 'DROP_SESSION') {
 		const newState = { ...state };
 
-		const { dayIndex, periodIndex, sessionIndex, session, weekIndex } =
-			action.payload.data;
+		const { dayIndex, periodIndex, sessionIndex, session, weekIndex } = action.payload.data;
 
-		newState.periods[periodIndex].plan[weekIndex].days[
-			dayIndex
-		].sessions.splice(sessionIndex, 1);
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions.splice(sessionIndex, 1);
 
-		newState.periods[periodIndex].plan[weekIndex].days[
-			dayIndex
-		].sessions.splice(action.payload.droppedAtIndex, 0, session);
+		newState.periods[periodIndex].plan[weekIndex].days[dayIndex].sessions.splice(action.payload.droppedAtIndex, 0, session);
 
 		return { ...newState };
 	}
@@ -230,11 +155,7 @@ const reducer = (state: any, action: any) => {
 
 		newState.periods[periodIndex].plan[weekIndex].days.splice(dayIndex, 1);
 
-		newState.periods[periodIndex].plan[weekIndex].days.splice(
-			action.payload.droppedAtIndex,
-			0,
-			day,
-		);
+		newState.periods[periodIndex].plan[weekIndex].days.splice(action.payload.droppedAtIndex, 0, day);
 
 		return { ...newState };
 	}
@@ -246,11 +167,7 @@ const reducer = (state: any, action: any) => {
 
 		newState.periods[periodIndex].plan.splice(weekIndex, 1);
 
-		newState.periods[periodIndex].plan.splice(
-			action.payload.droppedAtIndex,
-			0,
-			week,
-		);
+		newState.periods[periodIndex].plan.splice(action.payload.droppedAtIndex, 0, week);
 
 		return { ...newState };
 	}
@@ -264,6 +181,19 @@ const reducer = (state: any, action: any) => {
 
 		newState.periods.splice(action.payload.droppedAtIndex, 0, trainingPeriod);
 
+		return { ...newState };
+	}
+
+	if (action.type === 'RESET_FROM_STORE') {
+		const newState = { ...state };
+
+		newState.periods = action.payload.store;
+		return { ...newState };
+	}
+
+	if (action.type === 'SET_STORE') {
+		const newState = { ...state };
+		newState.store = action.payload.store;
 		return { ...newState };
 	}
 
