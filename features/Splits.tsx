@@ -9,6 +9,8 @@ import Icon from '../components/Icon';
 import SortableContainer, { ListItem } from '../components/SortableContainer';
 import { AddButton, InputWrapper } from '../styles/components';
 import { theme } from '../styles/theme';
+import Select from '../components/Select';
+import NumberInput from '../components/NumberInput';
 
 type Props = {
 	splits: TypeSessionSplit[];
@@ -103,30 +105,21 @@ const Splits = ({ splits, periodIndex, weekIndex, sessionIndex, dayIndex }: Prop
 								</InputWrapper>
 								<InputWrapper>
 									<label>Split Intensity</label>
-									<select
-										defaultValue={split.intensity}
-										onChange={(e) => {
-											handleSplitType(daytypes[e.target.selectedIndex], periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex);
-										}}
-									>
-										{daytypes.map((splitType: string, idx) => (
-											<option key={idx} value={splitType}>
-												{splitType}
-											</option>
-										))}
-									</select>
+									<Select options={daytypes} handleSelect={handleSplitType} data={{ periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex }} selectedOption={split.intensity} />
 								</InputWrapper>
 								<div>
 									{isMeasuerdByTime && (
 										<InputWrapper>
 											<label>Minutes</label>
-											<input type='number' value={split.minutes} onChange={(e) => handleSplitTime(e.target.value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex)} />
+											<NumberInput label={split.unit} value={split.minutes} data={{ periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex }} onChangeFunction={handleSplitDistance} />
+											{/* <input type='number' value={split.minutes} onChange={(e) => handleSplitTime(e.target.value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex)} /> */}
 										</InputWrapper>
 									)}
 									{!isMeasuerdByTime && (
 										<InputWrapper>
 											<label>Distance {split.unit}</label>
-											<input type='number' value={split.distance} onChange={(e) => handleSplitDistance(e.target.value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex)} />
+											<NumberInput label={split.unit} value={split.distance} data={{ periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex }} onChangeFunction={handleSplitDistance} />
+											{/* <input type='number' value={split.distance} onChange={(e) => handleSplitDistance(e.target.value, periodIndex, weekIndex, dayIndex, sessionIndex, splitIndex)} /> */}
 										</InputWrapper>
 									)}
 									{units.map((_: string, idx: number) => (

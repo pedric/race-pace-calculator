@@ -9,6 +9,7 @@ import DraggableContainer from '../components/DraggableContainer';
 import Icon from '../components/Icon';
 import SortableContainer, { ListItem } from '../components/SortableContainer';
 import { AddButton, InputWrapper } from '../styles/components';
+import { SessionSummary } from '../components/TrainingPlanSummary';
 
 type Props = {
 	sessions: TypeSession[];
@@ -85,6 +86,7 @@ const Sessions = ({ sessions, periodIndex, weekIndex, dayIndex }: Props) => {
 								sessionIndex={sessionIndex}
 								dayIndex={dayIndex}
 							/> */}
+							<SessionSummary periodIndex={periodIndex} weekIndex={weekIndex} dayIndex={dayIndex} sessionIndex={sessionIndex} />
 						</Fragment>
 					);
 				})}

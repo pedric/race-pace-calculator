@@ -10,6 +10,7 @@ import DropZone from '../components/dropZone';
 import DraggableContainer from '../components/DraggableContainer';
 import SortableContainer, { ListItem } from '../components/SortableContainer';
 import { AddButton, InputWrapper } from '../styles/components';
+import { DaySummary } from '../components/TrainingPlanSummary';
 
 type Props = {
 	weekIsFull: boolean;
@@ -94,6 +95,7 @@ const TrainingDays = ({ days, periodIndex, weekIndex, weekDaySet, weekIsFull }: 
 								weekIndex={weekIndex}
 								dayIndex={dayIndex}
 							/> */}
+							<DaySummary periodIndex={periodIndex} weekIndex={weekIndex} dayIndex={dayIndex} />
 						</Fragment>
 					);
 				})}

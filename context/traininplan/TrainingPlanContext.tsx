@@ -1,13 +1,6 @@
 import React, { createContext, useReducer } from 'react';
 import reducer from './reducer';
-import {
-	TypeTrainingPlanState,
-	TypePeriod,
-	TypeWeek,
-	TypeDay,
-	TypeSession,
-	TypeSessionSplit,
-} from '../../types';
+import { TypeTrainingPlanState, TypePeriod, TypeWeek, TypeDay, TypeSession, TypeSessionSplit } from '../../types';
 import { defaultSplit, defaultSession, defaultPeriod } from './defaults';
 
 export type TypeTrainingPlanContext = {
@@ -21,77 +14,18 @@ export type TypeTrainingPlanContext = {
 	setDraggedType: (type: string | null) => void;
 	addDay: (periodIndex: number, weekIndex: number) => void;
 	addWeek: (periodIndex: number, weekIndex: number) => void;
-	addSession: (
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-	) => void;
-	addSplit: (
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-	) => void;
+	addSession: (periodIndex: number, weekIndex: number, dayIndex: number) => void;
+	addSplit: (periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number) => void;
 	addPeriod: () => void;
 	handlePeriodName: (value: string, periodIndex: number) => void;
-	handleSplitName: (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => void;
-	handleSplitType: (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => void;
-	handleSplitUnit: (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => void;
-	handleSplitTime: (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => void;
-	handleSplitDistance: (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => void;
-	handleSessionName: (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-	) => void;
-	handleDayName: (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-	) => void;
-	handleWeekName: (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-	) => void;
+	handleSplitName: (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => void;
+	handleSplitType: (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => void;
+	handleSplitUnit: (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => void;
+	handleSplitTime: (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => void;
+	handleSplitDistance: (value: string | number, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => void;
+	handleSessionName: (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number) => void;
+	handleDayName: (value: string, periodIndex: number, weekIndex: number, dayIndex: number) => void;
+	handleWeekName: (value: string, periodIndex: number, weekIndex: number) => void;
 	handleWeekStart: (startsMonday: boolean) => void;
 	handleDrop: (type: string, data: any, droppedAtIndex: number) => void;
 	handleSomethingIsDragged: (isDragged: boolean) => void;
@@ -131,8 +65,7 @@ const initialState: TypeTrainingPlanContext = {
 	setStore: () => {},
 };
 
-export const TrainingplanContext =
-	createContext<TypeTrainingPlanContext>(initialState);
+export const TrainingplanContext = createContext<TypeTrainingPlanContext>(initialState);
 
 interface Props {
 	children: React.ReactNode;
@@ -176,23 +109,14 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
-	const addSession = (
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-	) => {
+	const addSession = (periodIndex: number, weekIndex: number, dayIndex: number) => {
 		dispatch({
 			type: 'ADD_SESSION',
 			payload: { periodIndex, weekIndex, dayIndex },
 		});
 	};
 
-	const addSplit = (
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-	) => {
+	const addSplit = (periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number) => {
 		dispatch({
 			type: 'ADD_SPLIT',
 			payload: { periodIndex, weekIndex, dayIndex, sessionIndex },
@@ -206,14 +130,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
-	const handleSplitName = (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => {
+	const handleSplitName = (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => {
 		dispatch({
 			type: 'EDIT_SPLIT_NAME',
 			payload: {
@@ -227,14 +144,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
-	const handleSplitType = (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => {
+	const handleSplitType = (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => {
 		dispatch({
 			type: 'EDIT_SPLIT_TYPE',
 			payload: {
@@ -248,14 +158,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
-	const handleSplitUnit = (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => {
+	const handleSplitUnit = (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => {
 		dispatch({
 			type: 'EDIT_SPLIT_UNIT',
 			payload: {
@@ -269,14 +172,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
-	const handleSplitTime = (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => {
+	const handleSplitTime = (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => {
 		dispatch({
 			type: 'EDIT_SPLIT_TIME',
 			payload: {
@@ -290,14 +186,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
-	const handleSplitDistance = (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-		splitIndex: number,
-	) => {
+	const handleSplitDistance = (value: string | number, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number, splitIndex: number) => {
 		dispatch({
 			type: 'EDIT_SPLIT_DISTANCE',
 			payload: {
@@ -321,13 +210,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
-	const handleSessionName = (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-		sessionIndex: number,
-	) => {
+	const handleSessionName = (value: string, periodIndex: number, weekIndex: number, dayIndex: number, sessionIndex: number) => {
 		dispatch({
 			type: 'EDIT_SESSION_NAME',
 			payload: {
@@ -340,12 +223,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
-	const handleDayName = (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-		dayIndex: number,
-	) => {
+	const handleDayName = (value: string, periodIndex: number, weekIndex: number, dayIndex: number) => {
 		dispatch({
 			type: 'EDIT_DAY_NAME',
 			payload: {
@@ -357,11 +235,7 @@ export const TrainingPlanProvider = ({ children }: Props) => {
 		});
 	};
 
-	const handleWeekName = (
-		value: string,
-		periodIndex: number,
-		weekIndex: number,
-	) => {
+	const handleWeekName = (value: string, periodIndex: number, weekIndex: number) => {
 		dispatch({
 			type: 'EDIT_WEEK_NAME',
 			payload: {
